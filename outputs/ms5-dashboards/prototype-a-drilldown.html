@@ -1,0 +1,213 @@
+<meta charset="utf-8">
+<title>Genre Price Drill-down</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: three stacked panels in a top-down funnel (genre -> price band -> traits), breadcrumb on top */
+:root{
+  --bg:#f7f6f2; --panel:#fdfdfb; --fg:#161614; --fg2:#5a5955; --muted:#8c8a83; --line:#dddbd3;
+  --hit:#2a78d6; --hit-soft:#cde2fb; --miss:#e4e2da; --sel:#eb6834; --sel-soft:#fbe3d8;
+  --sans:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#171716; --panel:#1f1f1d; --fg:#f2f1ec; --fg2:#bdbbb2; --muted:#8a897f; --line:#36352f;
+  --hit:#3987e5; --hit-soft:#1c3a63; --miss:#2d2c28; --sel:#d95926; --sel-soft:#4a2718; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#171716; --panel:#1f1f1d; --fg:#f2f1ec; --fg2:#bdbbb2; --muted:#8a897f; --line:#36352f;
+  --hit:#3987e5; --hit-soft:#1c3a63; --miss:#2d2c28; --sel:#d95926; --sel-soft:#4a2718; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.45}
+.wrap{max-width:1100px;margin:0 auto;padding-block:20px 48px;padding-inline:16px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px;text-wrap:balance}
+.sub{color:var(--fg2);margin:0 0 14px;max-width:70ch}
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px;margin-bottom:14px}
+.bar label{display:flex;gap:8px;align-items:center;color:var(--fg2)}
+.bar select{font:inherit;font-family:var(--mono);font-size:13px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg)}
+.crumb{font-family:var(--mono);font-size:13px;color:var(--fg2);margin-left:auto}
+.crumb b{color:var(--sel);font-weight:500}
+.crumb button{font:inherit;color:var(--hit);background:none;border:0;cursor:pointer;padding:0;text-decoration:underline}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;min-width:0}
+.panel h2{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 2px;font-weight:600}
+.panel .q{margin:0 0 10px;color:var(--fg2);font-size:13px}
+.panel .q em{font-style:normal;color:var(--fg)}
+svg{display:block;width:100%;height:auto;overflow:visible}
+text{font-family:var(--sans);fill:var(--fg)}
+.mono{font-family:var(--mono)}
+.tip{position:fixed;pointer-events:none;background:var(--fg);color:var(--bg);padding:6px 9px;border-radius:4px;font-size:12px;font-family:var(--mono);opacity:0;transition:opacity .1s;z-index:9;max-width:260px}
+.bubble{cursor:pointer}
+.bubble:focus-visible circle{stroke:var(--sel);stroke-width:3}
+.shelf{cursor:pointer}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.c{text-align:center}
+.box{display:inline-block;width:13px;height:13px;border:1.5px solid var(--hit);border-radius:2px;vertical-align:middle}
+.box.on{background:var(--hit)}
+.tscroll{overflow-x:auto}
+.traits{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 14px}
+.trait{border:1px solid var(--line);border-radius:5px;padding:8px 10px}
+.trait .n{font-family:var(--mono);font-size:22px;font-weight:500}
+.trait .l{font-size:12px;color:var(--fg2)}
+.trait .d{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.trait .d.up{color:var(--hit)}
+.note{font-size:12px;color:var(--muted);margin:8px 0 0}
+.empty{color:var(--muted);font-style:italic}
+@media (prefers-reduced-motion:no-preference){ .bubble circle,.cell{transition:r .25s,fill .2s,opacity .2s} }
+</style>
+
+<div class="wrap">
+  <h1>If I commit to a genre, what price and features do its successful games share?</h1>
+  <p class="sub">Prototype A. Pick a genre in the bubbles, then a price band on the shelves. Each click narrows the next view. Data: Steam Games Dataset (Kaggle), 99,754 games with a non-empty owner estimate, top 10 genres.</p>
+
+  <div class="bar">
+    <label>Success means owner band lower bound ≥
+      <select id="thr"><option value="100000">100,000</option><option value="200000">200,000</option><option value="500000">500,000</option><option value="1000000">1,000,000</option></select>
+    </label>
+    <label>Genre bubble size
+      <select id="metric"><option value="mean">mean owner midpoint</option><option value="share">share of successful games</option></select>
+    </label>
+    <div class="crumb" id="crumb"></div>
+  </div>
+
+  <div class="grid">
+    <section class="panel" id="p1">
+      <h2>1 · Genre reach (sketch RC5)</h2>
+      <p class="q">Which genres reach the most owners? <em>Click a bubble to focus the views below on that genre.</em></p>
+      <svg id="bubbles" viewBox="0 0 1060 190"></svg>
+    </section>
+    <section class="panel" id="p2">
+      <h2>2 · Price shelves (sketch JL3)</h2>
+      <p class="q" id="q2">Within <em>all genres</em>, which price bands hold the largest share of successful games? <em>Click a shelf to list its traits.</em></p>
+      <svg id="shelves" viewBox="0 0 1060 250"></svg>
+    </section>
+    <section class="panel" id="p3">
+      <h2>3 · Traits of the successful games (sketch JL5)</h2>
+      <p class="q" id="q3"></p>
+      <div class="traits" id="traits"></div>
+      <div class="tscroll"><table id="tbl"></table></div>
+      <p class="note">Each trait tile shows the share of successful games in the current selection that meet the condition, and below it the same share among successful games across all genres and prices. Filled box = meets condition. Review share needs ≥50 reviews.</p>
+    </section>
+  </div>
+</div>
+<div class="tip" id="tip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const MID={0:10000,20000:35000,50000:75000,100000:150000,200000:350000,500000:750000,1000000:1500000,2000000:3500000,5000000:7500000,10000000:15000000,20000000:35000000,50000000:75000000,100000000:150000000};
+const BANDS=[{k:'Free',t:p=>p===0},{k:'$0–5',t:p=>p>0&&p<=5},{k:'$5–10',t:p=>p>5&&p<=10},{k:'$10–20',t:p=>p>10&&p<=20},{k:'$20–40',t:p=>p>20&&p<=40},{k:'>$40',t:p=>p>40}];
+const TRAITS=[{k:'Price ≤ $10',f:g=>g.price<=10},{k:'Reviews ≥ 80% positive',f:g=>g.pos>=80},{k:'Avg playtime ≥ 6 h',f:g=>g.hours>=6},{k:'2+ platforms',f:g=>g.plat>=2},{k:'5+ languages',f:g=>g.lang>=5}];
+const tip=document.getElementById('tip');
+const fmt=d3.format(',.0f'), pct=d3.format('.0%');
+let GEN=[],G=[],state={thr:100000,metric:'mean',genre:null,band:null};
+
+fetch('games-compact.json').then(r=>r.json()).then(j=>{
+  GEN=j.genres;
+  G=j.games.map(a=>({name:a[0],price:a[1],lo:a[2],mask:a[3],pos:a[4],hours:a[5],plat:a[6],lang:a[7],rev:a[8],mid:MID[a[2]]||a[2]}));
+  G.forEach(g=>{g.band=BANDS.findIndex(b=>b.t(g.price))});
+  bind(); render();
+});
+function bind(){
+  d3.select('#thr').on('change',e=>{state.thr=+e.target.value;render()});
+  d3.select('#metric').on('change',e=>{state.metric=e.target.value;render()});
+}
+const inGenre=g=>state.genre===null||(g.mask>>state.genre&1);
+const ok=g=>g.lo>=state.thr;
+
+function render(){ crumb(); bubbles(); shelves(); traits(); }
+
+function crumb(){
+  const c=d3.select('#crumb').html('');
+  c.append('button').text('All genres').on('click',()=>{state.genre=null;state.band=null;render()});
+  if(state.genre!==null){ c.append('span').text(' › '); c.append('b').text(GEN[state.genre]); }
+  if(state.band!==null){ c.append('span').text(' › '); c.append('b').text(BANDS[state.band].k); }
+  if(state.genre===null&&state.band===null) c.append('span').text('  (nothing selected)').style('color','var(--muted)');
+}
+
+function bubbles(){
+  const rows=GEN.map((name,i)=>{const s=G.filter(g=>g.mask>>i&1);return{i,name,n:s.length,mean:d3.mean(s,g=>g.mid),share:d3.mean(s,g=>ok(g)?1:0)}});
+  const v=d=>d[state.metric];
+  const r=d3.scaleSqrt().domain([0,d3.max(rows,v)]).range([0,52]);
+  const x=d3.scalePoint().domain(rows.map(d=>d.i)).range([60,1000]);
+  const svg=d3.select('#bubbles');
+  const sel=svg.selectAll('g.bubble').data(rows,d=>d.i);
+  const ent=sel.enter().append('g').attr('class','bubble').attr('tabindex',0).attr('role','button');
+  ent.append('circle').attr('cy',78).attr('fill','var(--hit-soft)').attr('stroke','var(--hit)').attr('stroke-width',1.5);
+  ent.append('text').attr('class','mono').attr('text-anchor','middle').attr('y',82).attr('font-size',12);
+  ent.append('text').attr('class','lab').attr('text-anchor','middle').attr('y',165).attr('font-size',12);
+  ent.append('line').attr('y1',130).attr('y2',150).attr('stroke','var(--line)');
+  const all=ent.merge(sel);
+  all.attr('transform',d=>`translate(${x(d.i)},0)`)
+     .on('click',(e,d)=>{state.genre=state.genre===d.i?null:d.i;state.band=null;render()})
+     .on('keydown',(e,d)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();state.genre=state.genre===d.i?null:d.i;state.band=null;render()}})
+     .on('mousemove',(e,d)=>showTip(e,`${d.name}\nn = ${fmt(d.n)} games\nmean owner midpoint ${fmt(d.mean)}\nsuccessful ${pct(d.share)}`))
+     .on('mouseleave',hideTip);
+  all.select('circle').attr('r',d=>Math.max(6,r(v(d))))
+     .attr('fill',d=>state.genre===d.i?'var(--sel-soft)':'var(--hit-soft)')
+     .attr('stroke',d=>state.genre===d.i?'var(--sel)':'var(--hit)')
+     .attr('stroke-width',d=>state.genre===d.i?3:1.5)
+     .attr('opacity',d=>state.genre===null||state.genre===d.i?1:.45);
+  all.select('text.mono').text(d=>state.metric==='mean'?d3.format('.3~s')(d.mean).replace('k','k'):pct(d.share)).attr('fill','var(--fg)');
+  all.select('text.lab').text(d=>d.name.replace('Massively Multiplayer','MMO')).attr('font-weight',d=>state.genre===d.i?600:400).attr('fill',d=>state.genre===d.i?'var(--sel)':'var(--fg)');
+  all.select('line').attr('y1',d=>78+Math.max(6,r(v(d))));
+  svg.selectAll('text.axis').data([0]).enter().append('text').attr('class','axis').attr('x',0).attr('y',14).attr('font-size',11).attr('fill','var(--muted)').text('Circle area = '+(state.metric==='mean'?'mean of estimated-owner band midpoints':'share of games meeting the success threshold'));
+  svg.select('text.axis').text('Circle area = '+(state.metric==='mean'?'mean of estimated-owner band midpoints':'share of games meeting the success threshold'));
+}
+
+function shelves(){
+  d3.select('#q2').html(`Within <em>${state.genre===null?'all genres':GEN[state.genre]}</em>, which price bands hold the largest share of successful games? <em>Click a shelf to list its traits.</em>`);
+  const pool=G.filter(inGenre);
+  const rows=BANDS.map((b,i)=>{const s=pool.filter(g=>g.band===i);const h=s.filter(ok).length;return{i,k:b.k,n:s.length,h,share:s.length?h/s.length:0}});
+  const svg=d3.select('#shelves');
+  const x=d3.scaleBand().domain(rows.map(d=>d.i)).range([20,1050]).paddingInner(.18);
+  const sel=svg.selectAll('g.shelf').data(rows,d=>d.i);
+  const ent=sel.enter().append('g').attr('class','shelf').attr('tabindex',0).attr('role','button');
+  ent.append('rect').attr('class','bg').attr('x',-6).attr('y',20).attr('rx',5).attr('height',225).attr('fill','transparent');
+  ent.append('text').attr('class','k').attr('y',40).attr('font-size',14).attr('font-weight',600);
+  ent.append('text').attr('class','pc mono').attr('y',62).attr('font-size',13);
+  ent.append('text').attr('class','n mono').attr('y',236).attr('font-size',11).attr('fill','var(--muted)');
+  ent.append('g').attr('class','cells').attr('transform','translate(0,74)');
+  const all=ent.merge(sel).attr('transform',d=>`translate(${x(d.i)},0)`)
+    .on('click',(e,d)=>{state.band=state.band===d.i?null:d.i;render()})
+    .on('keydown',(e,d)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();state.band=state.band===d.i?null:d.i;render()}})
+    .on('mousemove',(e,d)=>showTip(e,`${d.k}\n${fmt(d.h)} of ${fmt(d.n)} games meet the threshold\n${pct(d.share)}`)).on('mouseleave',hideTip);
+  all.select('rect.bg').attr('width',x.bandwidth()+12).attr('fill',d=>state.band===d.i?'var(--sel-soft)':'transparent').attr('stroke',d=>state.band===d.i?'var(--sel)':'none');
+  all.select('text.k').text(d=>d.k).attr('fill',d=>state.band===d.i?'var(--sel)':'var(--fg)');
+  all.select('text.pc').text(d=>d.n?pct(d.share)+' successful':'no games');
+  all.select('text.n').text(d=>`n = ${fmt(d.n)}`);
+  // 20-cell stamp, 4 wide x 5 tall, like the hand sketch; filled cells = rounded 5% share
+  const cw=(x.bandwidth()-3*4)/4, ch=26;
+  all.select('g.cells').each(function(d){
+    const filled=Math.round(d.share*20);
+    const cells=d3.range(20).map(i=>({i,on:i<filled,row:4-Math.floor(i/4),col:i%4}));
+    const c=d3.select(this).selectAll('rect.cell').data(cells);
+    c.enter().append('rect').attr('class','cell').attr('rx',3).merge(c)
+      .attr('x',k=>k.col*(cw+4)).attr('y',k=>k.row*(ch+4)).attr('width',cw).attr('height',ch)
+      .attr('fill',k=>k.on?'var(--hit)':'var(--miss)');
+  });
+  all.attr('opacity',d=>state.band===null||state.band===d.i?1:.5);
+}
+
+function traits(){
+  const label=`${state.genre===null?'all genres':GEN[state.genre]}${state.band===null?', all prices':', '+BANDS[state.band].k}`;
+  const set=G.filter(g=>ok(g)&&inGenre(g)&&(state.band===null||g.band===state.band));
+  const base=G.filter(ok);
+  d3.select('#q3').html(`What do the <em>${fmt(set.length)} successful games</em> in <em>${label}</em> have in common?`);
+  const t=d3.select('#traits').html('');
+  TRAITS.forEach(tr=>{
+    const rel=tr.k.startsWith('Reviews')?set.filter(g=>g.pos>=0):set, relB=tr.k.startsWith('Reviews')?base.filter(g=>g.pos>=0):base;
+    const s=rel.length?d3.mean(rel,g=>tr.f(g)?1:0):0, b=d3.mean(relB,g=>tr.f(g)?1:0);
+    const d=t.append('div').attr('class','trait');
+    d.append('div').attr('class','n').text(rel.length?pct(s):'–');
+    d.append('div').attr('class','l').text(tr.k);
+    d.append('div').attr('class','d'+(s-b>0.05?' up':'')).text(`all successful: ${pct(b)}`);
+  });
+  const top=set.sort((a,b)=>b.lo-a.lo||b.rev-a.rev).slice(0,12);
+  const tbl=d3.select('#tbl').html('');
+  if(!top.length){tbl.append('tr').append('td').attr('class','empty').text('No successful games in this selection.');return}
+  const hr=tbl.append('tr');hr.append('th').text('Game');hr.append('th').text('Price');hr.append('th').text('Owners ≥');
+  TRAITS.forEach(tr=>hr.append('th').text(tr.k));
+  top.forEach(g=>{const r=tbl.append('tr');r.append('td').text(g.name||'(unnamed)');r.append('td').attr('class','mono').text(g.price?'$'+g.price.toFixed(2):'Free');r.append('td').attr('class','mono').text(d3.format('.2~s')(g.lo));
+    TRAITS.forEach(tr=>r.append('td').attr('class','c').append('span').attr('class','box'+(tr.f(g)?' on':'')))});
+}
+function showTip(e,txt){tip.textContent=txt;tip.style.whiteSpace='pre';tip.style.opacity=1;tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px'}
+function hideTip(){tip.style.opacity=0}
+</script>

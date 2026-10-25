@@ -1,0 +1,7 @@
+/* Placeholder stylesheet. Real design tokens arrive with the site structure step. */
+:root { --bg:#f7f6f2; --fg:#161614; --fg2:#5a5955; --line:#dddbd3; --accent:#2a78d6; }
+body { margin:0; background:var(--bg); color:var(--fg); font-family: system-ui, sans-serif; line-height:1.55; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 64px; }
+section { border-top: 1px solid var(--line); padding: 32px 0; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg2); }
+.viz-placeholder { border: 2px dashed var(--line); border-radius: 8px; padding: 48px 16px; text-align: center; color: var(--fg2); margin: 16px 0; }

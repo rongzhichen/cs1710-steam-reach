@@ -1,0 +1,187 @@
+<meta charset="utf-8">
+<title>Reach Is Earned, Not Priced</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column; each of the four story stages is a numbered act with one chart and a one-line takeaway */
+:root{
+  --bg:#f7f6f2; --panel:#fdfdfb; --fg:#161614; --fg2:#5a5955; --muted:#8c8a83; --line:#dddbd3;
+  --hit:#2a78d6; --hit-soft:#cde2fb; --miss:#e4e2da; --sel:#eb6834; --sel-soft:#fbe3d8;
+  --display:"Fraunces",Georgia,serif; --sans:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#171716; --panel:#1f1f1d; --fg:#f2f1ec; --fg2:#bdbbb2; --muted:#8a897f; --line:#36352f;
+  --hit:#3987e5; --hit-soft:#1c3a63; --miss:#2d2c28; --sel:#d95926; --sel-soft:#4a2718; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#171716; --panel:#1f1f1d; --fg:#f2f1ec; --fg2:#bdbbb2; --muted:#8a897f; --line:#36352f;
+  --hit:#3987e5; --hit-soft:#1c3a63; --miss:#2d2c28; --sel:#d95926; --sel-soft:#4a2718; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding-block:36px 64px;padding-inline:16px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,5vw,46px);line-height:1.1;margin:6px 0 10px;text-wrap:balance}
+.lede{font-size:17px;color:var(--fg2);max-width:62ch;margin:0 0 8px}
+.meta{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0 0 40px}
+.act{display:grid;grid-template-columns:72px minmax(0,1fr);gap:0 18px;padding-block:28px;border-top:1px solid var(--line)}
+@media (max-width:560px){.act{grid-template-columns:1fr}}
+.stage{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--sel);padding-top:6px}
+.act h2{font-family:var(--display);font-weight:500;font-size:26px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+.act p{max-width:64ch;margin:0 0 12px}
+.big{font-family:var(--display);font-weight:700;font-size:clamp(44px,9vw,84px);line-height:1;color:var(--sel);margin:6px 0 4px;font-variant-numeric:tabular-nums}
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin:14px 0 10px;min-width:0}
+.chart h3{font-size:13px;font-weight:600;margin:0 0 2px}
+.chart .sub{font-size:12px;color:var(--fg2);margin:0 0 8px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+text{font-family:var(--sans);fill:var(--fg);font-size:12px}
+.mono{font-family:var(--mono)}
+.take{border-left:3px solid var(--sel);padding:4px 12px;color:var(--fg);font-weight:500;margin:10px 0 0}
+.caveat{font-size:12.5px;color:var(--muted);margin-top:8px}
+.tip{position:fixed;pointer-events:none;background:var(--fg);color:var(--bg);padding:6px 9px;border-radius:4px;font-size:12px;font-family:var(--mono);opacity:0;transition:opacity .1s;z-index:9;white-space:pre}
+.todo{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:10px}
+.todo li{display:grid;grid-template-columns:28px 1fr;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.todo .k{font-family:var(--mono);color:var(--sel);font-weight:500}
+.todo b{display:block;margin-bottom:2px}
+.todo span{color:var(--fg2);font-size:14px}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.src{font-size:12px;color:var(--muted);margin-top:40px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+<div class="wrap">
+  <div class="eyebrow">CS1710 · Steam Games Dataset · a data story for solo developers</div>
+  <h1>Reach on Steam is earned, not priced</h1>
+  <p class="lede">You are about to ship your first commercial game. Should you price it at $4.99 to get players in the door? 99,754 Steam titles say that is the wrong question.</p>
+  <p class="meta">Steam Games Dataset (Kaggle, Steam API + SteamSpy) · 125,855 games · "reach" = estimated-owner band of at least 100,000</p>
+
+  <section class="act" id="hook">
+    <div class="stage">1 · Hook</div>
+    <div>
+      <h2>Three out of four games on Steam never pass 20,000 owners.</h2>
+      <div class="big" id="bigHook">75%</div>
+      <p>Developers see the hits, and the games next to theirs. They never see the long tail, because nobody writes about it. Of the games that have any owner estimate at all, only <b id="succPct">8.7%</b> ever reach 100,000 owners, and another <span class="mono" id="noEst">26,101</span> titles are so small that SteamSpy records no estimate.</p>
+      <div class="chart">
+        <h3>Where Steam games end up</h3>
+        <p class="sub">Share of games in each estimated-owner band. Orange bands count as "reach" in the rest of this story.</p>
+        <svg id="cOwners" viewBox="0 0 820 300"></svg>
+      </div>
+      <p class="take">Plan your finances for the 75% case. Then ask what the 9% did differently.</p>
+    </div>
+  </section>
+
+  <section class="act" id="rise1">
+    <div class="stage">2 · Rising insight</div>
+    <div>
+      <h2>Cheap does not buy reach. The $20–40 shelf succeeds most often.</h2>
+      <p>Half of all games that reached 100,000 owners cost under $5, so it is tempting to conclude that low prices win. But that shelf also holds 61,000 games. Per game, it is the <em>least</em> likely to reach 100,000 owners, and the $20–40 shelf is the most likely.</p>
+      <div class="chart">
+        <h3>Share of games on each price shelf that reached 100,000 owners</h3>
+        <p class="sub">Snapshot price in USD. Bars are rates, not counts; the grey labels show how many games sit on each shelf.</p>
+        <svg id="cPrice" viewBox="0 0 820 240"></svg>
+      </div>
+      <p class="take">Price is a signal of scope, not a lever for reach. Price to the game you built.</p>
+      <p class="caveat">Snapshot prices; many games were discounted or free at launch. We cannot see price history.</p>
+    </div>
+  </section>
+
+  <section class="act" id="rise2">
+    <div class="stage">3 · Rising insight</div>
+    <div>
+      <h2>Reach rises with how long people play and how many of them can read the game.</h2>
+      <p>Two things that developers can actually build are far more strongly associated with reach than price is. Games that hold players for 6 to 12 hours reach 100,000 owners more than five times as often as games played for under an hour. Games localized into 11 to 20 languages reach it five times as often as single-language games.</p>
+      <div class="pair">
+        <div class="chart">
+          <h3>Average playtime</h3>
+          <p class="sub">Reach rate by lifetime average playtime, games with recorded playtime only.</p>
+          <svg id="cHours" viewBox="0 0 400 230"></svg>
+        </div>
+        <div class="chart">
+          <h3>Supported languages</h3>
+          <p class="sub">Reach rate by number of supported languages.</p>
+          <svg id="cLangs" viewBox="0 0 400 230"></svg>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="chart">
+          <h3>Platforms</h3>
+          <p class="sub">Reach rate by number of operating systems supported.</p>
+          <svg id="cPlat" viewBox="0 0 400 170"></svg>
+        </div>
+        <div class="chart">
+          <h3>Review score</h3>
+          <p class="sub">Reach rate by positive-review share, games with 50+ reviews.</p>
+          <svg id="cRev" viewBox="0 0 400 170"></svg>
+        </div>
+      </div>
+      <p class="take">Depth and localization each move the odds by 5x. Review score moves them by 1.4x. Price moves them the wrong way.</p>
+      <p class="caveat">Associations, not causes. Playtime is only recorded for games with enough players, so the playtime chart describes 25,345 games. The 21+ language dip is mostly very small titles with machine-translated store pages.</p>
+    </div>
+  </section>
+
+  <section class="act" id="main">
+    <div class="stage">4 · Main message</div>
+    <div>
+      <h2>The traits stack. A deep, localized, well-reviewed game reaches 100,000 owners seven times out of ten.</h2>
+      <p>Neither trait works alone. Localizing a game that people drop within an hour does nothing. Depth without localization gets you to one in three. Together they get you past one in two, and adding a review share above 80% takes you to 72%.</p>
+      <div class="chart">
+        <h3>Reach rate by profile</h3>
+        <p class="sub">Each row is a group of games defined by its traits. Grey labels show group size.</p>
+        <svg id="cProf" viewBox="0 0 820 250"></svg>
+      </div>
+      <p class="take">Reach on Steam is earned by games people keep playing and can read in their own language. It is not bought with a low price.</p>
+    </div>
+  </section>
+
+  <section class="act" id="solution">
+    <div class="stage">5 · Solution</div>
+    <div>
+      <h2>What a solo developer should do with this</h2>
+      <ul class="todo">
+        <li><span class="k">01</span><div><b>Budget for the long tail.</b><span>Three in four games stay under 20,000 owners. Treat 100,000 as the upside case, not the plan.</span></div></li>
+        <li><span class="k">02</span><div><b>Stop pricing for reach.</b><span>Price to scope. The $10–40 shelves outperform the $0–5 shelf per game, and a higher price funds the next two items.</span></div></li>
+        <li><span class="k">03</span><div><b>Build for the sixth hour before the first DLC.</b><span>Playtime is the single strongest trait we found. Cut features that do not add play, and add ones that do.</span></div></li>
+        <li><span class="k">04</span><div><b>Localize to 6–20 languages at launch.</b><span>Not one, not forty. The 6–20 range is where the reach rate climbs steeply; beyond 20 the association disappears.</span></div></li>
+        <li><span class="k">05</span><div><b>Ship Mac and Linux builds if your engine makes it cheap.</b><span>Three-platform games reach 100k at 16% versus 7% for Windows-only. A modest, consistent edge.</span></div></li>
+      </ul>
+      <p class="src">Team: Rongzhi Chen, Lawrence Liao, Jack Liu. Built from games.csv, excluding 26,101 titles with no owner estimate. "Reach" is the lower bound of the SteamSpy estimated-owner band being at least 100,000. Owner bands are estimates, not sales. All relationships are associations in a snapshot; successful games may have added languages or platforms after they succeeded.</p>
+    </div>
+  </section>
+</div>
+<div class="tip" id="tip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="data.js"></script>
+<script>
+const tip=document.getElementById('tip'); const pct=d3.format('.0%'), pct1=d3.format('.1%'), fmt=d3.format(',');
+function showTip(e,t){tip.textContent=t;tip.style.opacity=1;tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px'}
+function hideTip(){tip.style.opacity=0}
+document.getElementById('succPct').textContent=pct1(DATA.successful/DATA.N);
+document.getElementById('noEst').textContent=fmt(DATA.noEstimate);
+document.getElementById('bigHook').textContent=pct(DATA.owners[0].share);
+
+// Hook: owner bands, vertical bars
+(function(){
+  const svg=d3.select('#cOwners'), W=820,H=300,M={l:46,r:10,t:16,b:54};
+  const d=DATA.owners; const x=d3.scaleBand().domain(d.map(o=>o.band)).range([M.l,W-M.r]).paddingInner(.18);
+  const y=d3.scaleLinear().domain([0,.8]).range([H-M.b,M.t]);
+  svg.append('g').attr('transform',`translate(${M.l},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(pct).tickSize(-(W-M.l-M.r))).call(g=>g.select('.domain').remove()).call(g=>g.selectAll('line').attr('stroke','var(--line)')).selectAll('text').attr('fill','var(--fg2)');
+  svg.append('g').attr('transform',`translate(0,${H-M.b})`).call(d3.axisBottom(x).tickSize(0)).call(g=>g.select('.domain').attr('stroke','var(--line)')).selectAll('text').attr('fill','var(--fg2)').attr('transform','rotate(-35)').attr('text-anchor','end').attr('dx','-.4em').attr('dy','.6em').style('font-size','11px');
+  svg.selectAll('rect').data(d).enter().append('rect').attr('x',o=>x(o.band)).attr('y',o=>y(o.share)).attr('width',x.bandwidth()).attr('height',o=>Math.max(2,y(0)-y(o.share))).attr('rx',3)
+    .attr('fill',(o,i)=>i>=3?'var(--sel)':'var(--miss)').on('mousemove',(e,o)=>showTip(e,`${o.band} owners\n${fmt(o.n)} games · ${pct1(o.share)}`)).on('mouseleave',hideTip);
+  svg.selectAll('text.v').data(d.filter((o,i)=>i<4)).enter().append('text').attr('class','v mono').attr('x',o=>x(o.band)+x.bandwidth()/2).attr('y',o=>y(o.share)-5).attr('text-anchor','middle').text(o=>pct1(o.share)).attr('fill','var(--fg)');
+  svg.append('text').attr('x',x('100–200k')).attr('y',y(.12)).attr('fill','var(--sel)').attr('font-weight',600).text('← reach: 8.7% of games');
+})();
+
+// Generic horizontal rate bars
+function hbars(sel,rows,W,H,opts={}){
+  const svg=d3.select(sel), M={l:opts.l||90,r:70,t:6,b:22}; const x=d3.scaleLinear().domain([0,opts.max||d3.max(rows,r=>r.rate)*1.1]).range([M.l,W-M.r]);
+  const y=d3.scaleBand().domain(rows.map(r=>r.band)).range([M.t,H-M.b]).paddingInner(.28);
+  svg.append('g').attr('transform',`translate(0,${H-M.b})`).call(d3.axisBottom(x).ticks(4).tickFormat(pct).tickSize(-(H-M.t-M.b))).call(g=>g.select('.domain').remove()).call(g=>g.selectAll('line').attr('stroke','var(--line)')).selectAll('text').attr('fill','var(--fg2)').attr('dy','1.1em');
+  const g=svg.selectAll('g.r').data(rows).enter().append('g').attr('class','r').attr('transform',r=>`translate(0,${y(r.band)})`).on('mousemove',(e,r)=>showTip(e,`${r.band}\n${fmt(r.n)} games · ${pct1(r.rate)} reached 100k`)).on('mouseleave',hideTip);
+  g.append('text').attr('x',M.l-8).attr('y',y.bandwidth()/2).attr('dy','.32em').attr('text-anchor','end').text(r=>r.band).attr('font-weight',r=>opts.hi&&opts.hi(r)?600:400);
+  g.append('rect').attr('x',x(0)).attr('width',r=>Math.max(2,x(r.rate)-x(0))).attr('height',y.bandwidth()).attr('rx',3).attr('fill',r=>opts.hi&&opts.hi(r)?'var(--sel)':'var(--hit)');
+  g.append('text').attr('class','mono').attr('x',r=>x(r.rate)+6).attr('y',y.bandwidth()/2).attr('dy','.32em').text(r=>pct(r.rate)).attr('fill','var(--fg)');
+  g.append('text').attr('class','mono').attr('x',W-M.r+4).attr('y',y.bandwidth()/2).attr('dy','.32em').text(r=>'n='+d3.format('.3~s')(r.n)).attr('fill','var(--muted)').style('font-size','11px').attr('text-anchor','start');
+}
+hbars('#cPrice',DATA.price,820,240,{l:70,max:.22,hi:r=>r.band==='$20–40'});
+hbars('#cHours',DATA.hours,400,230,{l:60,max:.7});
+hbars('#cLangs',DATA.langs,400,230,{l:60,max:.7});
+hbars('#cPlat',DATA.platforms,400,170,{l:84,max:.7});
+hbars('#cRev',DATA.reviews,400,170,{l:60,max:.7});
+hbars('#cProf',DATA.profiles,820,250,{l:250,max:.8,hi:r=>r.rate>.5});
+</script>
