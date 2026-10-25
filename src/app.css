@@ -21,7 +21,6 @@ h2{font-size:26px;line-height:1.2}
 .lede{font-size:17px;color:var(--fg2);max-width:70ch}
 section{border-top:1px solid var(--line);padding:40px 0}
 section p{max-width:72ch}
-.viz-placeholder{border:2px dashed var(--line);border-radius:8px;padding:48px 16px;text-align:center;color:var(--muted);margin:16px 0;font-size:14px}
 footer{border-top:1px solid var(--line);padding-top:24px;color:var(--fg2)}
 a{color:var(--hit)}
 

@@ -1,5 +1,5 @@
 # Raw dataset (383 MB CSV, 902 MB JSON) exceeds GitHub's 100 MB file limit.
-# Download it from Kaggle and run pipeline/build_data.py to regenerate data/.
+# Download it from Kaggle and run pipeline/build_data.py to regenerate static/data/.
 dataset/
 
 # Process-book exports and Word backups live in the shared Google Doc, not here.
@@ -11,7 +11,12 @@ dataset/
 .DS_Store
 __pycache__/
 *.pyc
+
+# SvelteKit / Vite
 node_modules/
+.svelte-kit/
+build/
+vite.config.js.timestamp-*
 
 # Process-book drafts, screenshots and earlier milestone outputs stay local.
 process-book/

@@ -2,8 +2,8 @@
 """Build the small JSON files the website loads from the raw Kaggle CSV.
 
 Input : dataset/games.csv  (Steam Games Dataset, Kaggle; not committed, ~383 MB)
-Output: data/games.json    one compact row per game with an owner estimate
-        data/summary.json  pre-aggregated tables and the numbers quoted in the story
+Output: static/data/games.json    one compact row per game with an owner estimate
+        static/data/summary.json  pre-aggregated tables and the numbers quoted in the story
 
 Cleaning rules (documented in the process book, MS3 and MS5):
   * The CSV header has 39 names for 40 values: "DiscountDLC count" is split into
@@ -23,7 +23,7 @@ Cleaning rules (documented in the process book, MS3 and MS5):
     rule the MS5 prototypes used; they are counted as noGenre.
   * Names are kept only for games at or above 100,000 owners (the named-games tables
     only ever show successful titles), which keeps games.json small.
-Run:  python3 pipeline/build_data.py [--csv dataset/games.csv] [--out data]
+Run:  python3 pipeline/build_data.py [--csv dataset/games.csv] [--out static/data]
 """
 import argparse, ast, csv, json, os, sys, time
 from collections import Counter, defaultdict
@@ -108,7 +108,7 @@ def rate_table(games, key_fn, keys, thr):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", default="dataset/games.csv")
-    ap.add_argument("--out", default="data")
+    ap.add_argument("--out", default="static/data")
     a = ap.parse_args()
     t0 = time.time()
 
