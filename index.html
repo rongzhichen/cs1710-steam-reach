@@ -12,37 +12,54 @@
   <header>
     <p class="eyebrow">CS1710 · Steam Games Dataset · a data story for solo developers and small studios</p>
     <h1>Steam Game Reach and Developer Decisions</h1>
-    <p>Prototype V1 skeleton. Sections follow the six-panel storyboard from Milestone 6; visualizations are added in later steps.</p>
+    <p class="lede">Most of what a developer hears about Steam comes from the games that made it. This page looks at all <span data-n-games>99,754</span> games with an owner estimate, asks which ones reached a real audience, and shows why comparing <em>rates among similar games</em> beats counting the famous cheap hits.</p>
+    <nav class="toc">
+      <a href="#hook">1 Hook</a><a href="#counts">2 Counts mislead</a><a href="#genre">3 Genre</a><a href="#traits">4 Traits</a><a href="#message">5 Message</a><a href="#tool">6 Comparison tool</a><a href="#explore">Explore</a>
+    </nav>
   </header>
 
   <section id="hook">
     <p class="eyebrow">1 · Hook</p>
     <h2>Does a low price mean greater reach?</h2>
-    <div class="viz-placeholder">Opening statistic and price-distribution view</div>
+    <p class="stat" data-story="hook_successfulCostAtMost10">85%</p>
+    <p class="stat-l">of games that reached 100,000 owners cost $10 or less, free games included.</p>
+    <p>Look only at the winners and the lesson writes itself: price low. Half of all successful games sit on the $0 to $5 shelf alone. But abundance on a shelf is not the same as a good chance of success on it. The question a developer should ask is not <em>where are the successful games</em> but <em>how often does a game like mine succeed</em>.</p>
+    <div class="story-chart"><svg id="c-hook"></svg></div>
+    <p class="caption">Share of the <span data-story="longTail_reach100k" data-as="n">99,754</span>-game store's successful titles (owner band ≥ 100k) on each price shelf. Snapshot prices.</p>
   </section>
 
   <section id="counts">
     <p class="eyebrow">2 · Rising insight</p>
     <h2>Counts can give the wrong impression</h2>
-    <div class="viz-placeholder">Price shelves: share of games meeting the owner threshold within each band</div>
+    <p>Read each shelf as a proportion of itself and the picture flips. Among paid games, <span data-story="counts_rate_0_5">7%</span> of titles priced up to $5 reached 100,000 owners. On the $20 to $40 shelf the rate is <span data-story="counts_rate_20_40">18%</span>. The cheap shelf holds the most successful games only because it holds <span data-story="counts_rate_0_5" data-as="n">61,319</span> games in total.</p>
+    <div class="story-chart"><svg id="c-counts"></svg></div>
+    <p class="caption">Grey: where the successful games are, as a share of all successful games. Blue: the reach rate inside each shelf. Only <span data-story="longTail_reach100k" data-as="pct1">8.7%</span> of all games reach 100k, and <span data-story="longTail_under20k">75%</span> never pass 20,000 owners.</p>
+    <div class="caveat">This does not mean raising a price raises reach. Pricier games are made by different teams with different budgets. It means the right comparison is a rate among comparable games, not a count of visible hits.</div>
   </section>
 
   <section id="genre">
     <p class="eyebrow">3 · Rising insight</p>
     <h2>Genre changes the comparison</h2>
-    <div class="viz-placeholder">Genre reach, then price shelves within the selected genre</div>
+    <p>The store-wide rate is still the wrong baseline for one developer, because genres differ. Inside RPG, the $20 to $40 shelf reaches 100,000 owners <span data-story="genre_rate_rpg_20_40">22%</span> of the time against <span data-story="genre_rate_all_20_40">18%</span> across all genres. Pick a genre to see how its shelves compare with the store.</p>
+    <p class="src">Compare all genres with <select id="c-genre-select" class="inline-select"></select></p>
+    <div class="story-chart"><svg id="c-genre"></svg></div>
+    <p class="caption">Reach rate (owner band ≥ 100k) per price shelf, all genres against <span class="c-genre-name">RPG</span>. Games can carry several genres, so a game may count in more than one.</p>
   </section>
 
   <section id="traits">
     <p class="eyebrow">4 · Rising insight</p>
     <h2>Comparable games have different traits</h2>
-    <div class="viz-placeholder">Trait shares of the selected slice against the all-games baseline</div>
+    <p>Once the peer group is right, what its successful games share also changes. Successful RPGs priced $10 to $20 report six or more hours of average playtime <span data-story="traits_hours6_rpg_10_20">82%</span> of the time, against <span data-story="traits_hours6_allSuccessful">47%</span> for all successful games. Only <span data-story="traits_platforms2_rpg_10_20">25%</span> of them ship on two or more operating systems, against <span data-story="traits_platforms2_allSuccessful">35%</span> overall. A developer who looked at the store-wide profile would budget for the wrong things.</p>
+    <div class="story-chart"><svg id="c-traits"></svg></div>
+    <p class="caption">Share of successful games meeting each condition. Review share counts games with ≥ 50 reviews only. The same comparison for any genre and shelf is in the tool below.</p>
   </section>
 
   <section id="message">
     <p class="eyebrow">5 · Main message</p>
     <h2>Compare rates among relevant peers</h2>
-    <p>For solo Steam developers, ownership rates among similar games are more useful for pricing decisions than counts of popular low-priced titles.</p>
+    <div class="callout"><p>For solo Steam developers, ownership rates among similar games are more useful for pricing decisions than counts of popular low-priced titles.</p></div>
+    <p>Low-priced games account for most high-ownership titles, but they do not have the highest proportion of games reaching our threshold. Genre and price together reveal differences in characteristics such as playtime and platform support. So the useful habit is to choose the games you would actually be compared with, and read proportions inside that group rather than success stories outside it.</p>
+    <div class="caveat">What the data cannot say: owner estimates are bands from SteamSpy, not sales, revenue or active players, and prices are a snapshot. None of these associations show that changing a price or adding a feature will cause greater reach. The 100,000-owner line is a choice; the tool below lets you move it.</div>
   </section>
 
   <section id="tool">
@@ -118,11 +135,13 @@
 
   <footer>
     <p class="eyebrow">Team</p>
-    <p>Rongzhi Chen · Lawrence Liao · Jack (Changming) Liu</p>
+    <p>Rongzhi Chen · Lawrence Liao · Jack (Changming) Liu · Harvard CS1710, Fall 2026</p>
+    <p class="src">Data: <a href="https://www.kaggle.com/datasets/fronkongames/steam-games-dataset">Steam Games Dataset</a> (Kaggle; Steam API and SteamSpy), 125,855 games, of which 99,754 have an owner estimate and a genre. Code and pipeline: <a href="https://github.com/rongzhichen/cs1710-steam-reach">github.com/rongzhichen/cs1710-steam-reach</a>. Prototype V1.</p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/story.js"></script>
 <script src="js/viz-drilldown.js"></script>
 <script src="js/viz-brush.js"></script>
 </body>
