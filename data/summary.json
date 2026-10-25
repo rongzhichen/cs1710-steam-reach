@@ -1,0 +1,1989 @@
+{
+ "meta": {
+  "source": "Steam Games Dataset (Kaggle), games.csv",
+  "csvRows": 125855,
+  "N": 99754,
+  "noEstimate": 24579,
+  "noGenre": 1522,
+  "defaultThreshold": 100000,
+  "built": "2026-10-25"
+ },
+ "genres": [
+  "Indie",
+  "Casual",
+  "Action",
+  "Adventure",
+  "Simulation",
+  "Strategy",
+  "RPG",
+  "Sports",
+  "Racing",
+  "Massively Multiplayer"
+ ],
+ "priceBands": [
+  "Free",
+  "$0–5",
+  "$5–10",
+  "$10–20",
+  "$20–40",
+  ">$40"
+ ],
+ "thresholds": [
+  100000,
+  200000,
+  500000,
+  1000000
+ ],
+ "owners": [
+  {
+   "band": "0–20k",
+   "low": 0,
+   "n": 74484,
+   "share": 0.7467
+  },
+  {
+   "band": "20–50k",
+   "low": 20000,
+   "n": 11271,
+   "share": 0.113
+  },
+  {
+   "band": "50–100k",
+   "low": 50000,
+   "n": 5296,
+   "share": 0.0531
+  },
+  {
+   "band": "100–200k",
+   "low": 100000,
+   "n": 3401,
+   "share": 0.0341
+  },
+  {
+   "band": "200–500k",
+   "low": 200000,
+   "n": 2823,
+   "share": 0.0283
+  },
+  {
+   "band": "500k–1M",
+   "low": 500000,
+   "n": 1139,
+   "share": 0.0114
+  },
+  {
+   "band": "1–2M",
+   "low": 1000000,
+   "n": 721,
+   "share": 0.0072
+  },
+  {
+   "band": "2–5M",
+   "low": 2000000,
+   "n": 401,
+   "share": 0.004
+  },
+  {
+   "band": "5–10M",
+   "low": 5000000,
+   "n": 123,
+   "share": 0.0012
+  },
+  {
+   "band": "10–20M",
+   "low": 10000000,
+   "n": 51,
+   "share": 0.0005
+  },
+  {
+   "band": "20–50M",
+   "low": 20000000,
+   "n": 31,
+   "share": 0.0003
+  },
+  {
+   "band": "50–100M",
+   "low": 50000000,
+   "n": 9,
+   "share": 0.0001
+  },
+  {
+   "band": "100M+",
+   "low": 100000000,
+   "n": 4,
+   "share": 0.0
+  }
+ ],
+ "byThreshold": {
+  "100000": {
+   "successful": 8703,
+   "successfulAtMost10": 0.8474,
+   "price": [
+    {
+     "key": "Free",
+     "n": 9484,
+     "hits": 1470,
+     "rate": 0.155,
+     "shareOfSuccess": 0.1689
+    },
+    {
+     "key": "$0–5",
+     "n": 61319,
+     "hits": 4309,
+     "rate": 0.0703,
+     "shareOfSuccess": 0.4951
+    },
+    {
+     "key": "$5–10",
+     "n": 18040,
+     "hits": 1596,
+     "rate": 0.0885,
+     "shareOfSuccess": 0.1834
+    },
+    {
+     "key": "$10–20",
+     "n": 8816,
+     "hits": 999,
+     "rate": 0.1133,
+     "shareOfSuccess": 0.1148
+    },
+    {
+     "key": "$20–40",
+     "n": 1577,
+     "hits": 283,
+     "rate": 0.1795,
+     "shareOfSuccess": 0.0325
+    },
+    {
+     "key": ">$40",
+     "n": 518,
+     "hits": 46,
+     "rate": 0.0888,
+     "shareOfSuccess": 0.0053
+    }
+   ],
+   "pricePaidOnly": [
+    {
+     "key": "$0–5",
+     "n": 61319,
+     "hits": 4309,
+     "rate": 0.0703,
+     "shareOfSuccess": 0.5957
+    },
+    {
+     "key": "$5–10",
+     "n": 18040,
+     "hits": 1596,
+     "rate": 0.0885,
+     "shareOfSuccess": 0.2207
+    },
+    {
+     "key": "$10–20",
+     "n": 8816,
+     "hits": 999,
+     "rate": 0.1133,
+     "shareOfSuccess": 0.1381
+    },
+    {
+     "key": "$20–40",
+     "n": 1577,
+     "hits": 283,
+     "rate": 0.1795,
+     "shareOfSuccess": 0.0391
+    },
+    {
+     "key": ">$40",
+     "n": 518,
+     "hits": 46,
+     "rate": 0.0888,
+     "shareOfSuccess": 0.0064
+    }
+   ],
+   "genre": [
+    {
+     "key": "Indie",
+     "n": 71914,
+     "hits": 5269,
+     "rate": 0.0733,
+     "meanMid": 65124
+    },
+    {
+     "key": "Casual",
+     "n": 43710,
+     "hits": 2208,
+     "rate": 0.0505,
+     "meanMid": 45847
+    },
+    {
+     "key": "Action",
+     "n": 41427,
+     "hits": 4283,
+     "rate": 0.1034,
+     "meanMid": 161180
+    },
+    {
+     "key": "Adventure",
+     "n": 40497,
+     "hits": 3650,
+     "rate": 0.0901,
+     "meanMid": 109913
+    },
+    {
+     "key": "Simulation",
+     "n": 21363,
+     "hits": 1990,
+     "rate": 0.0932,
+     "meanMid": 96415
+    },
+    {
+     "key": "Strategy",
+     "n": 19847,
+     "hits": 2240,
+     "rate": 0.1129,
+     "meanMid": 104407
+    },
+    {
+     "key": "RPG",
+     "n": 18624,
+     "hits": 2208,
+     "rate": 0.1186,
+     "meanMid": 149566
+    },
+    {
+     "key": "Sports",
+     "n": 4305,
+     "hits": 322,
+     "rate": 0.0748,
+     "meanMid": 95604
+    },
+    {
+     "key": "Racing",
+     "n": 3601,
+     "hits": 296,
+     "rate": 0.0822,
+     "meanMid": 73010
+    },
+    {
+     "key": "Massively Multiplayer",
+     "n": 1916,
+     "hits": 457,
+     "rate": 0.2385,
+     "meanMid": 642534
+    }
+   ],
+   "genrePrice": [
+    [
+     {
+      "n": 6610,
+      "hits": 873
+     },
+     {
+      "n": 46441,
+      "hits": 2813
+     },
+     {
+      "n": 12411,
+      "hits": 931
+     },
+     {
+      "n": 5591,
+      "hits": 549
+     },
+     {
+      "n": 590,
+      "hits": 100
+     },
+     {
+      "n": 271,
+      "hits": 3
+     }
+    ],
+    [
+     {
+      "n": 3871,
+      "hits": 486
+     },
+     {
+      "n": 30039,
+      "hits": 1206
+     },
+     {
+      "n": 6664,
+      "hits": 321
+     },
+     {
+      "n": 2537,
+      "hits": 163
+     },
+     {
+      "n": 409,
+      "hits": 29
+     },
+     {
+      "n": 190,
+      "hits": 3
+     }
+    ],
+    [
+     {
+      "n": 4155,
+      "hits": 716
+     },
+     {
+      "n": 25284,
+      "hits": 2093
+     },
+     {
+      "n": 7409,
+      "hits": 779
+     },
+     {
+      "n": 3753,
+      "hits": 515
+     },
+     {
+      "n": 610,
+      "hits": 161
+     },
+     {
+      "n": 216,
+      "hits": 19
+     }
+    ],
+    [
+     {
+      "n": 3375,
+      "hits": 499
+     },
+     {
+      "n": 24419,
+      "hits": 1862
+     },
+     {
+      "n": 7844,
+      "hits": 712
+     },
+     {
+      "n": 4036,
+      "hits": 454
+     },
+     {
+      "n": 632,
+      "hits": 110
+     },
+     {
+      "n": 191,
+      "hits": 13
+     }
+    ],
+    [
+     {
+      "n": 1729,
+      "hits": 301
+     },
+     {
+      "n": 12071,
+      "hits": 847
+     },
+     {
+      "n": 4293,
+      "hits": 408
+     },
+     {
+      "n": 2581,
+      "hits": 317
+     },
+     {
+      "n": 504,
+      "hits": 98
+     },
+     {
+      "n": 185,
+      "hits": 19
+     }
+    ],
+    [
+     {
+      "n": 1883,
+      "hits": 380
+     },
+     {
+      "n": 11370,
+      "hits": 1033
+     },
+     {
+      "n": 3968,
+      "hits": 461
+     },
+     {
+      "n": 2160,
+      "hits": 287
+     },
+     {
+      "n": 337,
+      "hits": 70
+     },
+     {
+      "n": 129,
+      "hits": 9
+     }
+    ],
+    [
+     {
+      "n": 1771,
+      "hits": 360
+     },
+     {
+      "n": 9729,
+      "hits": 945
+     },
+     {
+      "n": 4135,
+      "hits": 468
+     },
+     {
+      "n": 2406,
+      "hits": 315
+     },
+     {
+      "n": 468,
+      "hits": 105
+     },
+     {
+      "n": 115,
+      "hits": 15
+     }
+    ],
+    [
+     {
+      "n": 415,
+      "hits": 82
+     },
+     {
+      "n": 2449,
+      "hits": 118
+     },
+     {
+      "n": 765,
+      "hits": 49
+     },
+     {
+      "n": 478,
+      "hits": 46
+     },
+     {
+      "n": 134,
+      "hits": 18
+     },
+     {
+      "n": 64,
+      "hits": 9
+     }
+    ],
+    [
+     {
+      "n": 317,
+      "hits": 51
+     },
+     {
+      "n": 2250,
+      "hits": 155
+     },
+     {
+      "n": 615,
+      "hits": 39
+     },
+     {
+      "n": 288,
+      "hits": 36
+     },
+     {
+      "n": 85,
+      "hits": 12
+     },
+     {
+      "n": 46,
+      "hits": 3
+     }
+    ],
+    [
+     {
+      "n": 827,
+      "hits": 313
+     },
+     {
+      "n": 622,
+      "hits": 67
+     },
+     {
+      "n": 248,
+      "hits": 33
+     },
+     {
+      "n": 162,
+      "hits": 28
+     },
+     {
+      "n": 47,
+      "hits": 15
+     },
+     {
+      "n": 10,
+      "hits": 1
+     }
+    ]
+   ]
+  },
+  "200000": {
+   "successful": 5302,
+   "successfulAtMost10": 0.8316,
+   "price": [
+    {
+     "key": "Free",
+     "n": 9484,
+     "hits": 933,
+     "rate": 0.0984,
+     "shareOfSuccess": 0.176
+    },
+    {
+     "key": "$0–5",
+     "n": 61319,
+     "hits": 2467,
+     "rate": 0.0402,
+     "shareOfSuccess": 0.4653
+    },
+    {
+     "key": "$5–10",
+     "n": 18040,
+     "hits": 1009,
+     "rate": 0.0559,
+     "shareOfSuccess": 0.1903
+    },
+    {
+     "key": "$10–20",
+     "n": 8816,
+     "hits": 663,
+     "rate": 0.0752,
+     "shareOfSuccess": 0.125
+    },
+    {
+     "key": "$20–40",
+     "n": 1577,
+     "hits": 199,
+     "rate": 0.1262,
+     "shareOfSuccess": 0.0375
+    },
+    {
+     "key": ">$40",
+     "n": 518,
+     "hits": 31,
+     "rate": 0.0598,
+     "shareOfSuccess": 0.0058
+    }
+   ],
+   "pricePaidOnly": [
+    {
+     "key": "$0–5",
+     "n": 61319,
+     "hits": 2467,
+     "rate": 0.0402,
+     "shareOfSuccess": 0.5647
+    },
+    {
+     "key": "$5–10",
+     "n": 18040,
+     "hits": 1009,
+     "rate": 0.0559,
+     "shareOfSuccess": 0.2309
+    },
+    {
+     "key": "$10–20",
+     "n": 8816,
+     "hits": 663,
+     "rate": 0.0752,
+     "shareOfSuccess": 0.1518
+    },
+    {
+     "key": "$20–40",
+     "n": 1577,
+     "hits": 199,
+     "rate": 0.1262,
+     "shareOfSuccess": 0.0455
+    },
+    {
+     "key": ">$40",
+     "n": 518,
+     "hits": 31,
+     "rate": 0.0598,
+     "shareOfSuccess": 0.0071
+    }
+   ],
+   "genre": [
+    {
+     "key": "Indie",
+     "n": 71914,
+     "hits": 2986,
+     "rate": 0.0415,
+     "meanMid": 65124
+    },
+    {
+     "key": "Casual",
+     "n": 43710,
+     "hits": 1157,
+     "rate": 0.0265,
+     "meanMid": 45847
+    },
+    {
+     "key": "Action",
+     "n": 41427,
+     "hits": 2799,
+     "rate": 0.0676,
+     "meanMid": 161180
+    },
+    {
+     "key": "Adventure",
+     "n": 40497,
+     "hits": 2154,
+     "rate": 0.0532,
+     "meanMid": 109913
+    },
+    {
+     "key": "Simulation",
+     "n": 21363,
+     "hits": 1238,
+     "rate": 0.058,
+     "meanMid": 96415
+    },
+    {
+     "key": "Strategy",
+     "n": 19847,
+     "hits": 1385,
+     "rate": 0.0698,
+     "meanMid": 104407
+    },
+    {
+     "key": "RPG",
+     "n": 18624,
+     "hits": 1380,
+     "rate": 0.0741,
+     "meanMid": 149566
+    },
+    {
+     "key": "Sports",
+     "n": 4305,
+     "hits": 199,
+     "rate": 0.0462,
+     "meanMid": 95604
+    },
+    {
+     "key": "Racing",
+     "n": 3601,
+     "hits": 174,
+     "rate": 0.0483,
+     "meanMid": 73010
+    },
+    {
+     "key": "Massively Multiplayer",
+     "n": 1916,
+     "hits": 338,
+     "rate": 0.1764,
+     "meanMid": 642534
+    }
+   ],
+   "genrePrice": [
+    [
+     {
+      "n": 6610,
+      "hits": 497
+     },
+     {
+      "n": 46441,
+      "hits": 1527
+     },
+     {
+      "n": 12411,
+      "hits": 536
+     },
+     {
+      "n": 5591,
+      "hits": 354
+     },
+     {
+      "n": 590,
+      "hits": 70
+     },
+     {
+      "n": 271,
+      "hits": 2
+     }
+    ],
+    [
+     {
+      "n": 3871,
+      "hits": 285
+     },
+     {
+      "n": 30039,
+      "hits": 592
+     },
+     {
+      "n": 6664,
+      "hits": 175
+     },
+     {
+      "n": 2537,
+      "hits": 88
+     },
+     {
+      "n": 409,
+      "hits": 15
+     },
+     {
+      "n": 190,
+      "hits": 2
+     }
+    ],
+    [
+     {
+      "n": 4155,
+      "hits": 484
+     },
+     {
+      "n": 25284,
+      "hits": 1286
+     },
+     {
+      "n": 7409,
+      "hits": 523
+     },
+     {
+      "n": 3753,
+      "hits": 369
+     },
+     {
+      "n": 610,
+      "hits": 121
+     },
+     {
+      "n": 216,
+      "hits": 16
+     }
+    ],
+    [
+     {
+      "n": 3375,
+      "hits": 306
+     },
+     {
+      "n": 24419,
+      "hits": 1033
+     },
+     {
+      "n": 7844,
+      "hits": 437
+     },
+     {
+      "n": 4036,
+      "hits": 294
+     },
+     {
+      "n": 632,
+      "hits": 73
+     },
+     {
+      "n": 191,
+      "hits": 11
+     }
+    ],
+    [
+     {
+      "n": 1729,
+      "hits": 207
+     },
+     {
+      "n": 12071,
+      "hits": 496
+     },
+     {
+      "n": 4293,
+      "hits": 256
+     },
+     {
+      "n": 2581,
+      "hits": 197
+     },
+     {
+      "n": 504,
+      "hits": 71
+     },
+     {
+      "n": 185,
+      "hits": 11
+     }
+    ],
+    [
+     {
+      "n": 1883,
+      "hits": 270
+     },
+     {
+      "n": 11370,
+      "hits": 584
+     },
+     {
+      "n": 3968,
+      "hits": 296
+     },
+     {
+      "n": 2160,
+      "hits": 180
+     },
+     {
+      "n": 337,
+      "hits": 51
+     },
+     {
+      "n": 129,
+      "hits": 4
+     }
+    ],
+    [
+     {
+      "n": 1771,
+      "hits": 234
+     },
+     {
+      "n": 9729,
+      "hits": 546
+     },
+     {
+      "n": 4135,
+      "hits": 302
+     },
+     {
+      "n": 2406,
+      "hits": 212
+     },
+     {
+      "n": 468,
+      "hits": 73
+     },
+     {
+      "n": 115,
+      "hits": 13
+     }
+    ],
+    [
+     {
+      "n": 415,
+      "hits": 59
+     },
+     {
+      "n": 2449,
+      "hits": 64
+     },
+     {
+      "n": 765,
+      "hits": 28
+     },
+     {
+      "n": 478,
+      "hits": 33
+     },
+     {
+      "n": 134,
+      "hits": 10
+     },
+     {
+      "n": 64,
+      "hits": 5
+     }
+    ],
+    [
+     {
+      "n": 317,
+      "hits": 29
+     },
+     {
+      "n": 2250,
+      "hits": 86
+     },
+     {
+      "n": 615,
+      "hits": 23
+     },
+     {
+      "n": 288,
+      "hits": 24
+     },
+     {
+      "n": 85,
+      "hits": 9
+     },
+     {
+      "n": 46,
+      "hits": 3
+     }
+    ],
+    [
+     {
+      "n": 827,
+      "hits": 239
+     },
+     {
+      "n": 622,
+      "hits": 41
+     },
+     {
+      "n": 248,
+      "hits": 24
+     },
+     {
+      "n": 162,
+      "hits": 21
+     },
+     {
+      "n": 47,
+      "hits": 12
+     },
+     {
+      "n": 10,
+      "hits": 1
+     }
+    ]
+   ]
+  },
+  "500000": {
+   "successful": 2479,
+   "successfulAtMost10": 0.7999,
+   "price": [
+    {
+     "key": "Free",
+     "n": 9484,
+     "hits": 474,
+     "rate": 0.05,
+     "shareOfSuccess": 0.1912
+    },
+    {
+     "key": "$0–5",
+     "n": 61319,
+     "hits": 1017,
+     "rate": 0.0166,
+     "shareOfSuccess": 0.4102
+    },
+    {
+     "key": "$5–10",
+     "n": 18040,
+     "hits": 492,
+     "rate": 0.0273,
+     "shareOfSuccess": 0.1985
+    },
+    {
+     "key": "$10–20",
+     "n": 8816,
+     "hits": 350,
+     "rate": 0.0397,
+     "shareOfSuccess": 0.1412
+    },
+    {
+     "key": "$20–40",
+     "n": 1577,
+     "hits": 125,
+     "rate": 0.0793,
+     "shareOfSuccess": 0.0504
+    },
+    {
+     "key": ">$40",
+     "n": 518,
+     "hits": 21,
+     "rate": 0.0405,
+     "shareOfSuccess": 0.0085
+    }
+   ],
+   "pricePaidOnly": [
+    {
+     "key": "$0–5",
+     "n": 61319,
+     "hits": 1017,
+     "rate": 0.0166,
+     "shareOfSuccess": 0.5072
+    },
+    {
+     "key": "$5–10",
+     "n": 18040,
+     "hits": 492,
+     "rate": 0.0273,
+     "shareOfSuccess": 0.2454
+    },
+    {
+     "key": "$10–20",
+     "n": 8816,
+     "hits": 350,
+     "rate": 0.0397,
+     "shareOfSuccess": 0.1746
+    },
+    {
+     "key": "$20–40",
+     "n": 1577,
+     "hits": 125,
+     "rate": 0.0793,
+     "shareOfSuccess": 0.0623
+    },
+    {
+     "key": ">$40",
+     "n": 518,
+     "hits": 21,
+     "rate": 0.0405,
+     "shareOfSuccess": 0.0105
+    }
+   ],
+   "genre": [
+    {
+     "key": "Indie",
+     "n": 71914,
+     "hits": 1165,
+     "rate": 0.0162,
+     "meanMid": 65124
+    },
+    {
+     "key": "Casual",
+     "n": 43710,
+     "hits": 417,
+     "rate": 0.0095,
+     "meanMid": 45847
+    },
+    {
+     "key": "Action",
+     "n": 41427,
+     "hits": 1456,
+     "rate": 0.0351,
+     "meanMid": 161180
+    },
+    {
+     "key": "Adventure",
+     "n": 40497,
+     "hits": 1008,
+     "rate": 0.0249,
+     "meanMid": 109913
+    },
+    {
+     "key": "Simulation",
+     "n": 21363,
+     "hits": 563,
+     "rate": 0.0264,
+     "meanMid": 96415
+    },
+    {
+     "key": "Strategy",
+     "n": 19847,
+     "hits": 604,
+     "rate": 0.0304,
+     "meanMid": 104407
+    },
+    {
+     "key": "RPG",
+     "n": 18624,
+     "hits": 683,
+     "rate": 0.0367,
+     "meanMid": 149566
+    },
+    {
+     "key": "Sports",
+     "n": 4305,
+     "hits": 87,
+     "rate": 0.0202,
+     "meanMid": 95604
+    },
+    {
+     "key": "Racing",
+     "n": 3601,
+     "hits": 76,
+     "rate": 0.0211,
+     "meanMid": 73010
+    },
+    {
+     "key": "Massively Multiplayer",
+     "n": 1916,
+     "hits": 203,
+     "rate": 0.1059,
+     "meanMid": 642534
+    }
+   ],
+   "genrePrice": [
+    [
+     {
+      "n": 6610,
+      "hits": 217
+     },
+     {
+      "n": 46441,
+      "hits": 529
+     },
+     {
+      "n": 12411,
+      "hits": 213
+     },
+     {
+      "n": 5591,
+      "hits": 165
+     },
+     {
+      "n": 590,
+      "hits": 40
+     },
+     {
+      "n": 271,
+      "hits": 1
+     }
+    ],
+    [
+     {
+      "n": 3871,
+      "hits": 126
+     },
+     {
+      "n": 30039,
+      "hits": 184
+     },
+     {
+      "n": 6664,
+      "hits": 59
+     },
+     {
+      "n": 2537,
+      "hits": 39
+     },
+     {
+      "n": 409,
+      "hits": 8
+     },
+     {
+      "n": 190,
+      "hits": 1
+     }
+    ],
+    [
+     {
+      "n": 4155,
+      "hits": 268
+     },
+     {
+      "n": 25284,
+      "hits": 586
+     },
+     {
+      "n": 7409,
+      "hits": 289
+     },
+     {
+      "n": 3753,
+      "hits": 215
+     },
+     {
+      "n": 610,
+      "hits": 86
+     },
+     {
+      "n": 216,
+      "hits": 12
+     }
+    ],
+    [
+     {
+      "n": 3375,
+      "hits": 144
+     },
+     {
+      "n": 24419,
+      "hits": 427
+     },
+     {
+      "n": 7844,
+      "hits": 217
+     },
+     {
+      "n": 4036,
+      "hits": 158
+     },
+     {
+      "n": 632,
+      "hits": 53
+     },
+     {
+      "n": 191,
+      "hits": 9
+     }
+    ],
+    [
+     {
+      "n": 1729,
+      "hits": 105
+     },
+     {
+      "n": 12071,
+      "hits": 203
+     },
+     {
+      "n": 4293,
+      "hits": 113
+     },
+     {
+      "n": 2581,
+      "hits": 96
+     },
+     {
+      "n": 504,
+      "hits": 40
+     },
+     {
+      "n": 185,
+      "hits": 6
+     }
+    ],
+    [
+     {
+      "n": 1883,
+      "hits": 131
+     },
+     {
+      "n": 11370,
+      "hits": 216
+     },
+     {
+      "n": 3968,
+      "hits": 137
+     },
+     {
+      "n": 2160,
+      "hits": 88
+     },
+     {
+      "n": 337,
+      "hits": 28
+     },
+     {
+      "n": 129,
+      "hits": 4
+     }
+    ],
+    [
+     {
+      "n": 1771,
+      "hits": 131
+     },
+     {
+      "n": 9729,
+      "hits": 231
+     },
+     {
+      "n": 4135,
+      "hits": 146
+     },
+     {
+      "n": 2406,
+      "hits": 112
+     },
+     {
+      "n": 468,
+      "hits": 53
+     },
+     {
+      "n": 115,
+      "hits": 10
+     }
+    ],
+    [
+     {
+      "n": 415,
+      "hits": 37
+     },
+     {
+      "n": 2449,
+      "hits": 26
+     },
+     {
+      "n": 765,
+      "hits": 8
+     },
+     {
+      "n": 478,
+      "hits": 8
+     },
+     {
+      "n": 134,
+      "hits": 5
+     },
+     {
+      "n": 64,
+      "hits": 3
+     }
+    ],
+    [
+     {
+      "n": 317,
+      "hits": 16
+     },
+     {
+      "n": 2250,
+      "hits": 37
+     },
+     {
+      "n": 615,
+      "hits": 6
+     },
+     {
+      "n": 288,
+      "hits": 10
+     },
+     {
+      "n": 85,
+      "hits": 6
+     },
+     {
+      "n": 46,
+      "hits": 1
+     }
+    ],
+    [
+     {
+      "n": 827,
+      "hits": 142
+     },
+     {
+      "n": 622,
+      "hits": 22
+     },
+     {
+      "n": 248,
+      "hits": 15
+     },
+     {
+      "n": 162,
+      "hits": 15
+     },
+     {
+      "n": 47,
+      "hits": 8
+     },
+     {
+      "n": 10,
+      "hits": 1
+     }
+    ]
+   ]
+  },
+  "1000000": {
+   "successful": 1340,
+   "successfulAtMost10": 0.7873,
+   "price": [
+    {
+     "key": "Free",
+     "n": 9484,
+     "hits": 270,
+     "rate": 0.0285,
+     "shareOfSuccess": 0.2015
+    },
+    {
+     "key": "$0–5",
+     "n": 61319,
+     "hits": 516,
+     "rate": 0.0084,
+     "shareOfSuccess": 0.3851
+    },
+    {
+     "key": "$5–10",
+     "n": 18040,
+     "hits": 269,
+     "rate": 0.0149,
+     "shareOfSuccess": 0.2007
+    },
+    {
+     "key": "$10–20",
+     "n": 8816,
+     "hits": 188,
+     "rate": 0.0213,
+     "shareOfSuccess": 0.1403
+    },
+    {
+     "key": "$20–40",
+     "n": 1577,
+     "hits": 81,
+     "rate": 0.0514,
+     "shareOfSuccess": 0.0604
+    },
+    {
+     "key": ">$40",
+     "n": 518,
+     "hits": 16,
+     "rate": 0.0309,
+     "shareOfSuccess": 0.0119
+    }
+   ],
+   "pricePaidOnly": [
+    {
+     "key": "$0–5",
+     "n": 61319,
+     "hits": 516,
+     "rate": 0.0084,
+     "shareOfSuccess": 0.4822
+    },
+    {
+     "key": "$5–10",
+     "n": 18040,
+     "hits": 269,
+     "rate": 0.0149,
+     "shareOfSuccess": 0.2514
+    },
+    {
+     "key": "$10–20",
+     "n": 8816,
+     "hits": 188,
+     "rate": 0.0213,
+     "shareOfSuccess": 0.1757
+    },
+    {
+     "key": "$20–40",
+     "n": 1577,
+     "hits": 81,
+     "rate": 0.0514,
+     "shareOfSuccess": 0.0757
+    },
+    {
+     "key": ">$40",
+     "n": 518,
+     "hits": 16,
+     "rate": 0.0309,
+     "shareOfSuccess": 0.015
+    }
+   ],
+   "genre": [
+    {
+     "key": "Indie",
+     "n": 71914,
+     "hits": 534,
+     "rate": 0.0074,
+     "meanMid": 65124
+    },
+    {
+     "key": "Casual",
+     "n": 43710,
+     "hits": 176,
+     "rate": 0.004,
+     "meanMid": 45847
+    },
+    {
+     "key": "Action",
+     "n": 41427,
+     "hits": 870,
+     "rate": 0.021,
+     "meanMid": 161180
+    },
+    {
+     "key": "Adventure",
+     "n": 40497,
+     "hits": 522,
+     "rate": 0.0129,
+     "meanMid": 109913
+    },
+    {
+     "key": "Simulation",
+     "n": 21363,
+     "hits": 284,
+     "rate": 0.0133,
+     "meanMid": 96415
+    },
+    {
+     "key": "Strategy",
+     "n": 19847,
+     "hits": 298,
+     "rate": 0.015,
+     "meanMid": 104407
+    },
+    {
+     "key": "RPG",
+     "n": 18624,
+     "hits": 352,
+     "rate": 0.0189,
+     "meanMid": 149566
+    },
+    {
+     "key": "Sports",
+     "n": 4305,
+     "hits": 46,
+     "rate": 0.0107,
+     "meanMid": 95604
+    },
+    {
+     "key": "Racing",
+     "n": 3601,
+     "hits": 34,
+     "rate": 0.0094,
+     "meanMid": 73010
+    },
+    {
+     "key": "Massively Multiplayer",
+     "n": 1916,
+     "hits": 126,
+     "rate": 0.0658,
+     "meanMid": 642534
+    }
+   ],
+   "genrePrice": [
+    [
+     {
+      "n": 6610,
+      "hits": 102
+     },
+     {
+      "n": 46441,
+      "hits": 233
+     },
+     {
+      "n": 12411,
+      "hits": 101
+     },
+     {
+      "n": 5591,
+      "hits": 71
+     },
+     {
+      "n": 590,
+      "hits": 27
+     },
+     {
+      "n": 271,
+      "hits": 0
+     }
+    ],
+    [
+     {
+      "n": 3871,
+      "hits": 59
+     },
+     {
+      "n": 30039,
+      "hits": 72
+     },
+     {
+      "n": 6664,
+      "hits": 26
+     },
+     {
+      "n": 2537,
+      "hits": 13
+     },
+     {
+      "n": 409,
+      "hits": 5
+     },
+     {
+      "n": 190,
+      "hits": 1
+     }
+    ],
+    [
+     {
+      "n": 4155,
+      "hits": 174
+     },
+     {
+      "n": 25284,
+      "hits": 339
+     },
+     {
+      "n": 7409,
+      "hits": 174
+     },
+     {
+      "n": 3753,
+      "hits": 117
+     },
+     {
+      "n": 610,
+      "hits": 56
+     },
+     {
+      "n": 216,
+      "hits": 10
+     }
+    ],
+    [
+     {
+      "n": 3375,
+      "hits": 78
+     },
+     {
+      "n": 24419,
+      "hits": 210
+     },
+     {
+      "n": 7844,
+      "hits": 108
+     },
+     {
+      "n": 4036,
+      "hits": 83
+     },
+     {
+      "n": 632,
+      "hits": 35
+     },
+     {
+      "n": 191,
+      "hits": 8
+     }
+    ],
+    [
+     {
+      "n": 1729,
+      "hits": 58
+     },
+     {
+      "n": 12071,
+      "hits": 94
+     },
+     {
+      "n": 4293,
+      "hits": 54
+     },
+     {
+      "n": 2581,
+      "hits": 49
+     },
+     {
+      "n": 504,
+      "hits": 25
+     },
+     {
+      "n": 185,
+      "hits": 4
+     }
+    ],
+    [
+     {
+      "n": 1883,
+      "hits": 66
+     },
+     {
+      "n": 11370,
+      "hits": 94
+     },
+     {
+      "n": 3968,
+      "hits": 76
+     },
+     {
+      "n": 2160,
+      "hits": 44
+     },
+     {
+      "n": 337,
+      "hits": 16
+     },
+     {
+      "n": 129,
+      "hits": 2
+     }
+    ],
+    [
+     {
+      "n": 1771,
+      "hits": 66
+     },
+     {
+      "n": 9729,
+      "hits": 115
+     },
+     {
+      "n": 4135,
+      "hits": 72
+     },
+     {
+      "n": 2406,
+      "hits": 58
+     },
+     {
+      "n": 468,
+      "hits": 33
+     },
+     {
+      "n": 115,
+      "hits": 8
+     }
+    ],
+    [
+     {
+      "n": 415,
+      "hits": 23
+     },
+     {
+      "n": 2449,
+      "hits": 12
+     },
+     {
+      "n": 765,
+      "hits": 3
+     },
+     {
+      "n": 478,
+      "hits": 3
+     },
+     {
+      "n": 134,
+      "hits": 3
+     },
+     {
+      "n": 64,
+      "hits": 2
+     }
+    ],
+    [
+     {
+      "n": 317,
+      "hits": 8
+     },
+     {
+      "n": 2250,
+      "hits": 15
+     },
+     {
+      "n": 615,
+      "hits": 3
+     },
+     {
+      "n": 288,
+      "hits": 5
+     },
+     {
+      "n": 85,
+      "hits": 3
+     },
+     {
+      "n": 46,
+      "hits": 0
+     }
+    ],
+    [
+     {
+      "n": 827,
+      "hits": 87
+     },
+     {
+      "n": 622,
+      "hits": 15
+     },
+     {
+      "n": 248,
+      "hits": 10
+     },
+     {
+      "n": 162,
+      "hits": 7
+     },
+     {
+      "n": 47,
+      "hits": 6
+     },
+     {
+      "n": 10,
+      "hits": 1
+     }
+    ]
+   ]
+  }
+ },
+ "years": [
+  {
+   "year": 2008,
+   "n": 155,
+   "hits": 80
+  },
+  {
+   "year": 2009,
+   "n": 305,
+   "hits": 144
+  },
+  {
+   "year": 2010,
+   "n": 253,
+   "hits": 123
+  },
+  {
+   "year": 2011,
+   "n": 258,
+   "hits": 158
+  },
+  {
+   "year": 2012,
+   "n": 317,
+   "hits": 221
+  },
+  {
+   "year": 2013,
+   "n": 436,
+   "hits": 291
+  },
+  {
+   "year": 2014,
+   "n": 1480,
+   "hits": 584
+  },
+  {
+   "year": 2015,
+   "n": 2449,
+   "hits": 668
+  },
+  {
+   "year": 2016,
+   "n": 4002,
+   "hits": 836
+  },
+  {
+   "year": 2017,
+   "n": 5696,
+   "hits": 706
+  },
+  {
+   "year": 2018,
+   "n": 7268,
+   "hits": 612
+  },
+  {
+   "year": 2019,
+   "n": 7041,
+   "hits": 577
+  },
+  {
+   "year": 2020,
+   "n": 8584,
+   "hits": 744
+  },
+  {
+   "year": 2021,
+   "n": 9487,
+   "hits": 734
+  },
+  {
+   "year": 2022,
+   "n": 9992,
+   "hits": 592
+  },
+  {
+   "year": 2023,
+   "n": 11544,
+   "hits": 626
+  },
+  {
+   "year": 2024,
+   "n": 15416,
+   "hits": 622
+  },
+  {
+   "year": 2025,
+   "n": 14586,
+   "hits": 250
+  },
+  {
+   "year": 2026,
+   "n": 298,
+   "hits": 0
+  }
+ ],
+ "languages": [
+  {
+   "key": "1",
+   "n": 51671,
+   "hits": 2493,
+   "rate": 0.0482,
+   "shareOfSuccess": 0.2883
+  },
+  {
+   "key": "2–4",
+   "n": 21663,
+   "hits": 1273,
+   "rate": 0.0588,
+   "shareOfSuccess": 0.1472
+  },
+  {
+   "key": "5–9",
+   "n": 13189,
+   "hits": 2254,
+   "rate": 0.1709,
+   "shareOfSuccess": 0.2606
+  },
+  {
+   "key": "10+",
+   "n": 12462,
+   "hits": 2628,
+   "rate": 0.2109,
+   "shareOfSuccess": 0.3039
+  }
+ ],
+ "story": {
+  "hook_successfulCostAtMost10": {
+   "value": 0.8474,
+   "n": 8703,
+   "definition": "share of games with >=100k owners priced <= $10, free included"
+  },
+  "counts_rate_0_5": {
+   "value": 0.0703,
+   "n": 61319,
+   "definition": "paid games priced ($0, $5]: share with >=100k owners"
+  },
+  "counts_rate_20_40": {
+   "value": 0.1795,
+   "n": 1577,
+   "definition": "paid games priced ($20, $40]: share with >=100k owners"
+  },
+  "genre_rate_all_20_40": {
+   "value": 0.1795,
+   "n": 1577,
+   "definition": "all genres, ($20, $40]: share with >=100k owners"
+  },
+  "genre_rate_rpg_20_40": {
+   "value": 0.2244,
+   "n": 468,
+   "definition": "RPG, ($20, $40]: share with >=100k owners"
+  },
+  "traits_hours6_allSuccessful": {
+   "value": 0.4655,
+   "n": 8703,
+   "definition": "successful games with avg playtime >= 6 h"
+  },
+  "traits_hours6_rpg_10_20": {
+   "value": 0.8222,
+   "n": 315,
+   "definition": "successful RPGs priced ($10, $20] with avg playtime >= 6 h"
+  },
+  "traits_platforms2_allSuccessful": {
+   "value": 0.3528,
+   "n": 8703,
+   "definition": "successful games on 2+ operating systems"
+  },
+  "traits_platforms2_rpg_10_20": {
+   "value": 0.2508,
+   "n": 315,
+   "definition": "successful RPGs priced ($10, $20] on 2+ operating systems"
+  },
+  "langs_paidIndie_5plus": {
+   "value": 0.1376,
+   "n": 16902,
+   "definition": "paid Indie games with 5+ languages: share with >=100k owners"
+  },
+  "langs_paidIndie_1to4": {
+   "value": 0.0424,
+   "n": 47786,
+   "definition": "paid Indie games with 1-4 languages: share with >=100k owners"
+  },
+  "longTail_under20k": {
+   "value": 0.7467,
+   "n": 99754,
+   "definition": "share of games with an estimate whose band is 0-20k"
+  },
+  "longTail_reach100k": {
+   "value": 0.0872,
+   "n": 99754,
+   "definition": "share of games with an estimate at >=100k owners"
+  }
+ }
+}
