@@ -14,13 +14,14 @@
     <h1>Steam Game Reach and Developer Decisions</h1>
     <p class="lede">Most of what a developer hears about Steam comes from the games that made it. This page looks at all <span data-n-games>99,754</span> games with an owner estimate, asks which ones reached a real audience, and shows why comparing <em>rates among similar games</em> beats counting the famous cheap hits.</p>
     <nav class="toc">
-      <a href="#hook">1 Hook</a><a href="#counts">2 Counts mislead</a><a href="#genre">3 Genre</a><a href="#traits">4 Traits</a><a href="#message">5 Message</a><a href="#tool">6 Comparison tool</a><a href="#explore">Explore</a>
+      <a href="#hook">1 Setting</a><a href="#counts">2 Counts mislead</a><a href="#genre">3 Genre</a><a href="#traits">4 Traits</a><a href="#message">5 Aha</a><a href="#tool">6 Solution</a><a href="#explore">Explore</a><a href="#next">Next views</a>
     </nav>
   </header>
 
   <section id="hook">
-    <p class="eyebrow">1 · Hook</p>
+    <p class="eyebrow">1 · Setting and hook</p>
     <h2>Does a low price mean greater reach?</h2>
+    <p><strong>The setting.</strong> You are a solo developer or a team of a few people, deciding the genre, price, scope and languages of your next Steam game, with one shot at it. You know the hits in your genre. You have never seen the long tail of games that sold nothing, so your sense of what works is shaped by the games that survived. The first number we found speaks to exactly that instinct.</p>
     <p class="stat" data-story="hook_successfulCostAtMost10">85%</p>
     <p class="stat-l">of games that reached 100,000 owners cost $10 or less, free games included.</p>
     <p>Look only at the winners and the lesson writes itself: price low. Half of all successful games sit on the $0 to $5 shelf alone. But abundance on a shelf is not the same as a good chance of success on it. The question a developer should ask is not <em>where are the successful games</em> but <em>how often does a game like mine succeed</em>.</p>
@@ -30,6 +31,7 @@
 
   <section id="counts">
     <p class="eyebrow">2 · Rising insight</p>
+    <p class="curio">You ask: so I should price low?</p>
     <h2>Counts can give the wrong impression</h2>
     <p>Read each shelf as a proportion of itself and the picture flips. Among paid games, <span data-story="counts_rate_0_5">7%</span> of titles priced up to $5 reached 100,000 owners. On the $20 to $40 shelf the rate is <span data-story="counts_rate_20_40">18%</span>. The cheap shelf holds the most successful games only because it holds <span data-story="counts_rate_0_5" data-as="n">61,319</span> games in total.</p>
     <div class="story-chart"><svg id="c-counts"></svg></div>
@@ -39,6 +41,7 @@
 
   <section id="genre">
     <p class="eyebrow">3 · Rising insight</p>
+    <p class="curio">You ask: is the store-wide rate even my rate?</p>
     <h2>Genre changes the comparison</h2>
     <p>The store-wide rate is still the wrong baseline for one developer, because genres differ. Inside RPG, the $20 to $40 shelf reaches 100,000 owners <span data-story="genre_rate_rpg_20_40">22%</span> of the time against <span data-story="genre_rate_all_20_40">18%</span> across all genres. Pick a genre to see how its shelves compare with the store.</p>
     <p class="src">Compare all genres with <select id="c-genre-select" class="inline-select"></select></p>
@@ -48,6 +51,7 @@
 
   <section id="traits">
     <p class="eyebrow">4 · Rising insight</p>
+    <p class="curio">You ask: what do the games I would be compared with look like?</p>
     <h2>Comparable games have different traits</h2>
     <p>Once the peer group is right, what its successful games share also changes. Successful RPGs priced $10 to $20 report six or more hours of average playtime <span data-story="traits_hours6_rpg_10_20">82%</span> of the time, against <span data-story="traits_hours6_allSuccessful">47%</span> for all successful games. Only <span data-story="traits_platforms2_rpg_10_20">25%</span> of them ship on two or more operating systems, against <span data-story="traits_platforms2_allSuccessful">35%</span> overall. A developer who looked at the store-wide profile would budget for the wrong things.</p>
     <div class="story-chart"><svg id="c-traits"></svg></div>
@@ -55,7 +59,7 @@
   </section>
 
   <section id="message">
-    <p class="eyebrow">5 · Main message</p>
+    <p class="eyebrow">5 · Aha moment</p>
     <h2>Compare rates among relevant peers</h2>
     <div class="callout"><p>For solo Steam developers, ownership rates among similar games are more useful for pricing decisions than counts of popular low-priced titles.</p></div>
     <p>Low-priced games account for most high-ownership titles, but they do not have the highest proportion of games reaching our threshold. Genre and price together reveal differences in characteristics such as playtime and platform support. So the useful habit is to choose the games you would actually be compared with, and read proportions inside that group rather than success stories outside it.</p>
@@ -63,9 +67,15 @@
   </section>
 
   <section id="tool">
-    <p class="eyebrow">6 · Solution</p>
+    <p class="eyebrow">6 · Solution and next steps</p>
     <h2>Turn the story into a comparison tool</h2>
     <p class="lede">Pick a genre in the bubbles, then a price band on the shelves. Each click narrows the next view to the games a developer would actually compare against, and every number is shown next to the same number for all successful games.</p>
+    <div class="steps">
+      <div><b>1 · Choose your peers.</b> Pick the genre you are committing to and the price band you are considering, not the whole store.</div>
+      <div><b>2 · Read the rate, not the count.</b> The shelf with the most successful games is rarely the shelf where a game most often succeeds.</div>
+      <div><b>3 · Budget for what your peers share.</b> Check playtime, languages and platforms among successful peers before paying for a feature the store-wide profile suggests.</div>
+      <div><b>4 · Stress-test the line.</b> Move the success threshold. A conclusion that holds at 100k and at 500k is one you can plan around.</div>
+    </div>
     <div class="bar">
       <label>Success means owner band lower bound ≥
         <select data-threshold><option value="100000">100,000</option><option value="200000">200,000</option><option value="500000">500,000</option><option value="1000000">1,000,000</option></select>
@@ -130,6 +140,17 @@
           <p class="note">Games can carry several genres, so genre shares overlap. Review share only counts games with ≥50 reviews.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="next">
+    <p class="eyebrow">Next steps · views planned for V2</p>
+    <h2>What comes next</h2>
+    <p>Three views are drafted but not built. The first is the novel view: it turns the comparison tool into a ladder, so a developer can watch the base rate move as each trait of their own game is added, with the sample size and uncertainty in view. All three use real numbers from the pipeline. <a href="process-book/drafts.html">Open the full drafts page</a>.</p>
+    <div class="drafts">
+      <figure><img src="process-book/img/draft-a-peer-ladder.png" alt="Draft A, peer ladder: reach rate as traits are added one at a time, with confidence whiskers"><figcaption>Draft A · novel view · peer ladder</figcaption></figure>
+      <figure><img src="process-book/img/draft-b-launch-cohorts.png" alt="Draft B, launch-year cohorts: reach rate by release year"><figcaption>Draft B · launch-year cohorts</figcaption></figure>
+      <figure><img src="process-book/img/draft-c-localization.png" alt="Draft C, localization ladder: reach rate by language count, all games versus RPG $10 to $20"><figcaption>Draft C · localization ladder</figcaption></figure>
     </div>
   </section>
 

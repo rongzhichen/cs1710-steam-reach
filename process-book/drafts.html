@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype V1 drafts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.draft{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 22px;margin:28px 0;max-width:900px}
+.draft h2{font-size:22px;margin-bottom:2px}.draft .q{font-size:13px;color:var(--fg2);margin:0 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px}
+.chip{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:14px;padding:3px 10px;color:var(--fg2)}
+.chip.on{background:var(--sel-soft);border-color:var(--sel);color:var(--fg)}
+.chip.ghost{border-style:dashed}
+.draft svg{display:block;width:100%;height:auto}
+.draft text{font-family:var(--sans);font-size:12px;fill:var(--fg)}
+.warn{display:inline-block;font-family:var(--mono);font-size:11px;background:var(--sel-soft);color:var(--sel);border-radius:3px;padding:1px 6px}
+.names{font-size:13px;color:var(--fg2);margin:10px 0 0}
+.names b{color:var(--fg);font-weight:500}
+.annot{font-size:12px;color:var(--muted);margin:8px 0 0}
+</style></head><body><div class="wrap">
+<p class="eyebrow">CS1710 · Prototype V1 · drafts for views not yet implemented</p>
+<h1 style="font-family:var(--display);font-size:30px">Three drafts</h1>
+<p class="lede">Digital drafts of the views planned for V2. Numbers are computed from the real data (owner band ≥ 100k) by the pipeline, so the mock-ups show real values.</p>
+
+<div class="draft" id="d1">
+  <p class="eyebrow">Draft A · novel view</p>
+  <h2>Peer ladder: describe your game, watch the base rate move</h2>
+  <p class="q">The developer adds one trait at a time. Each step shows the reach rate among games matching every trait so far, how many games that is, and how sure we can be. The ladder makes the main message visible: the right peer group changes the number, and a small peer group widens the uncertainty.</p>
+  <div class="chips"><span class="chip on">Genre: RPG</span><span class="chip on">Price: $10–20</span><span class="chip on">Languages: 5+</span><span class="chip on">Platforms: Windows only</span><span class="chip on">Early Access</span><span class="chip ghost">+ add trait</span></div>
+  <svg id="s1" viewBox="0 0 860 300"></svg>
+  <p class="names">Closest peers at the last step with ≥ 100k owners: <b>Bellwright</b>, <b>Nightingale</b>, <b>GRAV</b>, <b>Travellers Rest</b>, <b>Going Medieval</b>, <b>Quasimorph</b>.</p>
+  <p class="annot">Bar = share of matching games with ≥ 100k owners. Whisker = 95% Wilson interval. Dashed line = all games. The badge appears when fewer than 200 games match, which is the point where the comparison should be treated as a hint, not a rate. Traits are only those a developer chooses before launch; playtime and reviews are outcomes and stay out of the ladder.</p>
+</div>
+
+<div class="draft" id="d2">
+  <p class="eyebrow">Draft B</p>
+  <h2>Launch-year cohorts: how long reach takes to accumulate</h2>
+  <p class="q">Question 13 and 14 from MS4, reframed for what a snapshot can answer: games released earlier have had more time to accumulate owners, so recent cohorts look worse than they are. The view puts that on screen before a developer compares against old hits.</p>
+  <svg id="s2" viewBox="0 0 860 300"></svg>
+  <p class="annot">Bar = share of games released that year with ≥ 100k owners today; number above = games released that year. Two reading aids are planned: a selector for the developer's genre, and a shaded "too recent to judge" zone for the last two years. The dataset is a single snapshot, so this is reach-by-age, not a trend in player taste.</p>
+</div>
+
+<div class="draft" id="d3">
+  <p class="eyebrow">Draft C</p>
+  <h2>Localization ladder: languages inside the right peer group</h2>
+  <p class="q">Question 8 from MS4 (sketch LL1), moved from peak players to reach and placed inside the developer's own genre and price band, with the store-wide group alongside as the baseline.</p>
+  <svg id="s3" viewBox="0 0 860 240"></svg>
+  <p class="annot">Grey = all games, orange = RPG priced $10–20. The step from 2–4 to 5–9 languages is the largest in both groups, which is the decision a solo developer can act on. The genre and price band come from the same shared selection as the comparison tool.</p>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const pct=d3.format('.0%'),fmt=d3.format(',');
+// Draft A: constraint ladder (values from pipeline, see process-book/prototype-v1.md)
+const L=[["All games",99754,.087,.086,.089],["+ genre RPG",18624,.119,.114,.123],["+ price $10–20",2406,.131,.118,.145],["+ 5 or more languages",735,.260,.229,.293],["+ Windows only",570,.256,.222,.294],["+ Early Access",122,.164,.109,.240]];
+{const s=d3.select('#s1'),x=d3.scaleLinear().domain([0,.32]).range([220,780]),y=d3.scaleBand().domain(d3.range(L.length)).range([20,280]).paddingInner(.35);
+ s.append('line').attr('x1',x(.087)).attr('x2',x(.087)).attr('y1',14).attr('y2',286).attr('stroke','var(--base)').attr('stroke-dasharray','3 3');
+ s.append('text').attr('x',x(.087)+4).attr('y',12).attr('fill','var(--muted)').attr('font-size',11).text('all games 8.7%');
+ const r=s.selectAll('g').data(L).join('g').attr('transform',(d,i)=>`translate(0,${y(i)})`);
+ r.append('text').attr('x',150).attr('y',y.bandwidth()/2).attr('dy','.32em').attr('text-anchor','end').attr('font-weight',(d,i)=>i?400:500).text(d=>d[0]);
+ r.append('text').attr('x',212).attr('y',y.bandwidth()/2).attr('dy','.32em').attr('text-anchor','end').attr('class','mono').attr('fill','var(--muted)').attr('font-size',11).text(d=>'n='+fmt(d[1]));
+ r.append('rect').attr('x',x(0)).attr('height',y.bandwidth()).attr('rx',3).attr('width',d=>x(d[2])-x(0)).attr('fill',(d,i)=>i?'var(--sel)':'var(--dot)');
+ r.append('line').attr('x1',d=>x(d[3])).attr('x2',d=>x(d[4])).attr('y1',y.bandwidth()/2).attr('y2',y.bandwidth()/2).attr('stroke','var(--base)').attr('stroke-width',1.5);
+ r.append('line').attr('x1',d=>x(d[3])).attr('x2',d=>x(d[3])).attr('y1',y.bandwidth()/2-5).attr('y2',y.bandwidth()/2+5).attr('stroke','var(--base)').attr('stroke-width',1.5);
+ r.append('line').attr('x1',d=>x(d[4])).attr('x2',d=>x(d[4])).attr('y1',y.bandwidth()/2-5).attr('y2',y.bandwidth()/2+5).attr('stroke','var(--base)').attr('stroke-width',1.5);
+ r.append('text').attr('x',d=>x(d[4])+6).attr('y',y.bandwidth()/2).attr('dy','.32em').attr('class','mono').text(d=>pct(d[2]));
+ r.filter(d=>d[1]<200).append('text').attr('x',d=>x(d[4])+46).attr('y',y.bandwidth()/2).attr('dy','.32em').attr('fill','var(--sel)').attr('font-size',11).attr('class','mono').text('⚠ few peers');
+}
+// Draft B: release-year cohorts
+const Y=[[2014,1480,.395],[2015,2449,.273],[2016,4002,.209],[2017,5696,.124],[2018,7268,.084],[2019,7041,.082],[2020,8584,.087],[2021,9487,.077],[2022,9992,.059],[2023,11544,.054],[2024,15416,.040],[2025,14586,.017]];
+{const s=d3.select('#s2'),x=d3.scaleBand().domain(Y.map(d=>d[0])).range([50,840]).paddingInner(.25),y=d3.scaleLinear().domain([0,.42]).range([250,40]);
+ s.append('rect').attr('x',x(2024)-6).attr('y',30).attr('width',840-x(2024)+6).attr('height',230).attr('fill','var(--miss)').attr('opacity',.6);
+ s.append('text').attr('x',x(2024)).attr('y',44).attr('fill','var(--muted)').attr('font-size',11).text('too recent to judge');
+ s.append('g').attr('transform','translate(50,0)').call(d3.axisLeft(y).ticks(4).tickFormat(pct)).call(g=>g.select('.domain').remove()).selectAll('text').attr('fill','var(--fg2)');
+ const g=s.selectAll('g.b').data(Y).join('g').attr('class','b');
+ g.append('rect').attr('x',d=>x(d[0])).attr('y',d=>y(d[2])).attr('width',x.bandwidth()).attr('height',d=>250-y(d[2])).attr('rx',3).attr('fill','var(--hit)');
+ g.append('text').attr('x',d=>x(d[0])+x.bandwidth()/2).attr('y',d=>y(d[2])-6).attr('text-anchor','middle').attr('class','mono').attr('font-size',11).text(d=>pct(d[2]));
+ g.append('text').attr('x',d=>x(d[0])+x.bandwidth()/2).attr('y',268).attr('text-anchor','middle').text(d=>d[0]);
+ g.append('text').attr('x',d=>x(d[0])+x.bandwidth()/2).attr('y',284).attr('text-anchor','middle').attr('class','mono').attr('font-size',10).attr('fill','var(--muted)').text(d=>fmt(d[1]));
+ s.append('text').attr('x',50).attr('y',22).attr('fill','var(--muted)').attr('font-size',11).text('share of that year\'s releases with ≥ 100k owners today · number under the year = releases');
+}
+// Draft C: language ladder, all vs RPG $10-20
+const LG=[["1 language",.048,.059,51671,955],["2–4",.059,.095,21663,716],["5–9",.171,.218,13189,409],["10+",.211,.313,12462,326]];
+{const s=d3.select('#s3'),x=d3.scaleBand().domain(LG.map(d=>d[0])).range([60,840]).paddingInner(.35),y=d3.scaleLinear().domain([0,.36]).range([200,30]);
+ s.append('g').attr('transform','translate(60,0)').call(d3.axisLeft(y).ticks(4).tickFormat(pct)).call(g=>g.select('.domain').remove()).selectAll('text').attr('fill','var(--fg2)');
+ const w=x.bandwidth()/2-4;
+ const g=s.selectAll('g.b').data(LG).join('g').attr('class','b');
+ g.append('rect').attr('x',d=>x(d[0])).attr('y',d=>y(d[1])).attr('width',w).attr('height',d=>200-y(d[1])).attr('rx',3).attr('fill','var(--dot)');
+ g.append('rect').attr('x',d=>x(d[0])+w+8).attr('y',d=>y(d[2])).attr('width',w).attr('height',d=>200-y(d[2])).attr('rx',3).attr('fill','var(--sel)');
+ g.append('text').attr('x',d=>x(d[0])+w/2).attr('y',d=>y(d[1])-5).attr('text-anchor','middle').attr('class','mono').attr('font-size',11).text(d=>pct(d[1]));
+ g.append('text').attr('x',d=>x(d[0])+w*1.5+8).attr('y',d=>y(d[2])-5).attr('text-anchor','middle').attr('class','mono').attr('font-size',11).text(d=>pct(d[2]));
+ g.append('text').attr('x',d=>x(d[0])+x.bandwidth()/2).attr('y',220).attr('text-anchor','middle').text(d=>d[0]);
+ g.append('text').attr('x',d=>x(d[0])+x.bandwidth()/2).attr('y',236).attr('text-anchor','middle').attr('class','mono').attr('font-size',10).attr('fill','var(--muted)').text(d=>`n = ${fmt(d[3])} · ${fmt(d[4])}`);
+ const lg=s.append('g').attr('transform','translate(600,12)');lg.append('rect').attr('width',12).attr('height',12).attr('fill','var(--dot)');lg.append('text').attr('x',16).attr('y',10).text('all games');lg.append('rect').attr('x',100).attr('width',12).attr('height',12).attr('fill','var(--sel)');lg.append('text').attr('x',116).attr('y',10).text('RPG, $10–20');
+}
+</script></body></html>
