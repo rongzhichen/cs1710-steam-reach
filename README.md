@@ -26,8 +26,8 @@ GitHub Pages: https://rongzhichen.github.io/cs1710-steam-reach/
 | `js/` | One file per D3 visualization plus `main.js` for shared state. |
 | `data/` | Small derived JSON files the site loads (built by the pipeline). |
 | `pipeline/` | Python script that cleans the raw CSV and writes `data/`. |
-| `process-book/` | Markdown drafts and images for the process book (master copy is the shared Google Doc). |
-| `outputs/` | Earlier milestone work: sketches, MS5 mini-dashboards, MS6 story draft. |
+| `drafts/` | The rendered drafts page and images for the views planned for V2. |
+| `process-book/`, `outputs/` | Local only (ignored): process-book exports and screenshots, and earlier milestone work. |
 
 The raw dataset is not committed (it is over GitHub's file-size limit). To rebuild
 `data/`, download `games.csv` from Kaggle into `dataset/` and run:

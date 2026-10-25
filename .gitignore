@@ -12,3 +12,7 @@ dataset/
 __pycache__/
 *.pyc
 node_modules/
+
+# Process-book drafts, screenshots and earlier milestone outputs stay local.
+process-book/
+outputs/
