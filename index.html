@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Steam Game Reach and Developer Decisions</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -47,7 +48,72 @@
   <section id="tool">
     <p class="eyebrow">6 · Solution</p>
     <h2>Turn the story into a comparison tool</h2>
-    <div class="viz-placeholder">Linked explorer with an explicit baseline: choose a genre, compare price bands, inspect traits and named games, change the threshold</div>
+    <p class="lede">Pick a genre in the bubbles, then a price band on the shelves. Each click narrows the next view to the games a developer would actually compare against, and every number is shown next to the same number for all successful games.</p>
+    <div class="bar">
+      <label>Success means owner band lower bound ≥
+        <select data-threshold><option value="100000">100,000</option><option value="200000">200,000</option><option value="500000">500,000</option><option value="1000000">1,000,000</option></select>
+      </label>
+      <label>Genre bubble size
+        <select id="dd-metric"><option value="mean">mean owner midpoint</option><option value="share">share of successful games</option></select>
+      </label>
+      <div class="crumb"></div>
+    </div>
+    <p class="loading">Loading <span data-n-games>99,754</span> games…</p>
+    <div class="grid">
+      <div class="panel">
+        <h3>1 · Genre reach</h3>
+        <p class="q">Which genres reach the most owners? <em>Click a bubble to focus the views below on that genre.</em></p>
+        <svg id="dd-bubbles" viewBox="0 0 1060 190"></svg>
+      </div>
+      <div class="panel">
+        <h3>2 · Price shelves</h3>
+        <p class="q" id="dd-q2"></p>
+        <svg id="dd-shelves" viewBox="0 0 1060 250"></svg>
+      </div>
+      <div class="panel">
+        <h3>3 · Traits of the successful games</h3>
+        <p class="q" id="dd-q3"></p>
+        <div class="traits" id="dd-traits"></div>
+        <div class="tscroll"><table id="dd-table"></table></div>
+        <p class="note">Each tile shows the share of successful games in the current selection that meet the condition, and below it the same share among all successful games. Filled box = meets condition. Review share needs ≥50 reviews. Owner estimates are bands, not sales.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="explore">
+    <p class="eyebrow">Explore</p>
+    <h2>Ask your own question of the whole store</h2>
+    <p class="lede">Every dot is one game, placed by price and estimated-owner band. Drag a rectangle to select a region; the panels summarize the games inside it against the all-games baseline. Click a genre to light up its games.</p>
+    <div class="bar">
+      <label>Success line at owner band ≥
+        <select data-threshold><option value="100000">100,000</option><option value="200000">200,000</option><option value="500000">500,000</option><option value="1000000">1,000,000</option></select>
+      </label>
+      <label>Show <select id="bx-show"><option value="all">all games</option><option value="ok">successful only</option></select></label>
+      <button id="bx-clear">Clear selection</button>
+      <div class="status"></div>
+    </div>
+    <p class="loading">Loading…</p>
+    <div class="grid two">
+      <div class="panel">
+        <h3>Game-level scatter</h3>
+        <p class="q">Price (x) against estimated-owner band (y). <em>Drag to brush a region.</em> Dots above the dashed line count as successful.</p>
+        <div class="plot" id="bx-plot"><canvas id="bx-canvas"></canvas><svg id="bx-overlay"></svg></div>
+        <div class="legend"><span style="--c:var(--dot)">below success line</span><span style="--c:var(--hit)">successful</span><span style="--c:var(--sel)">highlighted genre</span></div>
+      </div>
+      <div class="col">
+        <div class="panel">
+          <h3>Genre mix of the selection</h3>
+          <p class="q">Share of selected games in each genre. The black tick is the same share across all games. <em>Click a bar to highlight the genre.</em></p>
+          <svg id="bx-genres" viewBox="0 0 420 262"></svg>
+        </div>
+        <div class="panel">
+          <h3>Traits of the selection</h3>
+          <p class="q" id="bx-tq"></p>
+          <svg id="bx-traits" viewBox="0 0 420 140"></svg>
+          <p class="note">Games can carry several genres, so genre shares overlap. Review share only counts games with ≥50 reviews.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <footer>
@@ -57,5 +123,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/viz-drilldown.js"></script>
+<script src="js/viz-brush.js"></script>
 </body>
 </html>
