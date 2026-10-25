@@ -16,8 +16,8 @@ It runs in a few seconds and prints an audit of the numbers quoted in the story.
 | File | Role |
 |---|---|
 | `dataset/games.csv` | Raw input, 125,855 rows, 40 columns (header lists 39 names). |
-| `data/games.json` | One compact row per eligible game (99,754 rows, about 3.9 MB). Loaded by the interactive views. |
-| `data/summary.json` | Pre-aggregated tables and the canonical numbers the story quotes (about 30 KB). Loaded by the narrative sections. |
+| `static/data/games.json` | One compact row per eligible game (99,754 rows, about 3.9 MB). Loaded by the interactive views. |
+| `static/data/summary.json` | Pre-aggregated tables and the canonical numbers the story quotes (about 30 KB). Loaded by the narrative sections. |
 
 ## Cleaning rules
 

@@ -21,16 +21,20 @@ GitHub Pages: https://rongzhichen.github.io/cs1710-steam-reach/
 
 | Path | What it holds |
 |---|---|
-| `index.html` | The single-page site. Sections follow the six-panel MS6 storyboard. |
-| `css/` | Site styles. |
-| `js/` | One file per D3 visualization plus `main.js` for shared state. |
-| `data/` | Small derived JSON files the site loads (built by the pipeline). |
-| `pipeline/` | Python script that cleans the raw CSV and writes `data/`. |
-| `drafts/` | The rendered drafts page and images for the views planned for V2. |
+| `src/routes/+page.svelte` | The single-page site. Sections follow the six-panel MS6 storyboard. |
+| `src/routes/+layout.svelte`, `+layout.js` | Global stylesheet import; marks every route as prerendered. |
+| `src/app.css` | Design tokens (light and dark), fonts and all site styles. |
+| `src/lib/data.js` | Data loader, compact-row column mapping, owner bands, price bands, traits, formatters. |
+| `src/lib/stores.js` | The shared success-threshold store and the loaded dataset. |
+| `src/lib/components/` | One Svelte + D3 component per view: four story charts, `ComparisonTool.svelte`, `Explorer.svelte`, the threshold select and the prose-number span. |
+| `static/data/` | Small derived JSON files the site loads (built by the pipeline). |
+| `static/drafts/` | The rendered drafts page and images for the views planned for V2. |
+| `pipeline/` | Python script that cleans the raw CSV and writes `static/data/`. |
+| `.github/workflows/deploy.yml` | Builds the site and deploys it to GitHub Pages on every push to `main`. |
 | `process-book/`, `outputs/` | Local only (ignored): process-book exports and screenshots, and earlier milestone work. |
 
 The raw dataset is not committed (it is over GitHub's file-size limit). To rebuild
-`data/`, download `games.csv` from Kaggle into `dataset/` and run:
+`static/data/`, download `games.csv` from Kaggle into `dataset/` and run:
 
 ```bash
 python3 pipeline/build_data.py
@@ -38,13 +42,24 @@ python3 pipeline/build_data.py
 
 ## Running locally
 
-Any static server works. From the repository root:
+The site is a SvelteKit app (Svelte 5, Vite, D3) built as a fully static site with
+`@sveltejs/adapter-static`. It needs Node 20 or newer.
 
 ```bash
-python3 -m http.server 8080
+npm install
+npm run dev
 ```
 
-Then open http://localhost:8080/.
+Then open http://localhost:5173/cs1710-steam-reach/ (the base path matches the GitHub
+Pages project URL). To check the production build locally:
+
+```bash
+npm run build
+npm run preview
+```
+
+The build lands in `build/`. Pushing to `main` runs the GitHub Actions workflow, which
+builds the site and publishes `build/` to GitHub Pages.
 
 ## Definitions used throughout
 
