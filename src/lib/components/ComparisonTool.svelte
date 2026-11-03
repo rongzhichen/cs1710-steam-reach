@@ -1,22 +1,22 @@
 <script>
   // Comparison tool (storyboard panel 6): genre bubbles -> price shelves -> trait tiles and named games.
   import * as d3 from 'd3';
-  import { threshold, dataset } from '$lib/stores.js';
+  import { threshold, dataset, peerGenre, peerBand } from '$lib/stores.js';
   import { BANDS, TRAITS, fmt, pct, traitShare } from '$lib/data.js';
   import { showTip, hideTip } from '$lib/tip.js';
   import ThresholdSelect from './ThresholdSelect.svelte';
 
-  let metric = $state('mean');
-  let genre = $state(null);
-  let band = $state(null);
+  let metric = $state('share');
+  const genre = $derived($peerGenre);
+  const band = $derived($peerBand);
   let bubbleSvg, shelfSvg;
 
   const GEN = $derived($dataset?.GEN ?? []);
   const inGenre = g => genre === null || (g.mask >> genre) & 1;
   const genreLabel = $derived(genre === null ? 'all genres' : GEN[genre]);
 
-  function pickGenre(i) { genre = genre === i ? null : i; band = null; }
-  function pickBand(i) { band = band === i ? null : i; }
+  function pickGenre(i) { $peerGenre = genre === i ? null : i; $peerBand = null; }
+  function pickBand(i) { $peerBand = band === i ? null : i; }
   const key = (fn, d) => e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(d); } };
 
   // 1 · Genre bubbles
@@ -109,7 +109,7 @@
     <select id="dd-metric" bind:value={metric}><option value="mean">mean owner midpoint</option><option value="share">share of successful games</option></select>
   </label>
   <div class="crumb">
-    <button onclick={() => { genre = null; band = null; }}>All genres</button>
+    <button onclick={() => { $peerGenre = null; $peerBand = null; }}>All genres</button>
     {#if genre !== null}<span> › </span><b>{GEN[genre]}</b>{/if}
     {#if band !== null}<span> › </span><b>{BANDS[band].k}</b>{/if}
     {#if genre === null && band === null}<span style="color:var(--muted)">  (nothing selected)</span>{/if}

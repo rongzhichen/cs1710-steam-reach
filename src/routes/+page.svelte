@@ -10,10 +10,12 @@
   import StoryTraits from '$lib/components/StoryTraits.svelte';
   import ComparisonTool from '$lib/components/ComparisonTool.svelte';
   import Explorer from '$lib/components/Explorer.svelte';
+  import PeerLab from '$lib/components/PeerLab.svelte';
+  let loadError = $state('');
 
   // The game rows are fetched on the client, not in a load function, so the 4 MB of data is never
   // inlined into the prerendered HTML. The prose numbers below fall back to the published values.
-  onMount(() => { loadData(base).then(d => dataset.set(d)); });
+  onMount(() => { loadData(base).then(d => dataset.set(d)).catch(() => { loadError = 'The game data could not be loaded. Please reload the page to try again.'; }); });
   const nGames = $derived(fmt($dataset?.meta?.N ?? 99754));
 </script>
 
@@ -23,12 +25,13 @@
 </svelte:head>
 
 <div class="wrap">
+  {#if loadError}<p class="caveat" role="alert">{loadError}</p>{/if}
   <header>
     <p class="eyebrow">CS1710 · Steam Games Dataset · a data story for solo developers and small studios</p>
     <h1>Steam Game Reach and Developer Decisions</h1>
     <p class="lede">Most of what a developer hears about Steam comes from the games that made it. This page looks at all <span data-n-games>{nGames}</span> games with an owner estimate, asks which ones reached a real audience, and shows why comparing <em>rates among similar games</em> beats counting the famous cheap hits.</p>
     <nav class="toc">
-      <a href="#hook">1 Setting</a><a href="#counts">2 Counts mislead</a><a href="#genre">3 Genre</a><a href="#traits">4 Traits</a><a href="#message">5 Aha</a><a href="#tool">6 Solution</a><a href="#explore">Explore</a><a href="#next">Next views</a>
+      <a href="#hook">1 Setting</a><a href="#counts">2 Counts mislead</a><a href="#genre">3 Genre</a><a href="#traits">4 Traits</a><a href="#message">5 Aha</a><a href="#tool">6 Solution</a><a href="#explore">Explore</a><a href="#next">Peer lab</a>
     </nav>
   </header>
 
@@ -99,19 +102,15 @@
   </section>
 
   <section id="next">
-    <p class="eyebrow">Next steps · views planned for V2</p>
-    <h2>What comes next</h2>
-    <p>Three views are drafted but not built. The first is the novel view: it turns the comparison tool into a ladder, so a developer can watch the base rate move as each trait of their own game is added, with the sample size and uncertainty in view. All three use real numbers from the pipeline. <a href="{base}/drafts/index.html">Open the full drafts page</a>.</p>
-    <div class="drafts">
-      <figure><img src="{base}/drafts/img/draft-a-peer-ladder.png" alt="Draft A, peer ladder: reach rate as traits are added one at a time, with confidence whiskers"><figcaption>Draft A · novel view · peer ladder</figcaption></figure>
-      <figure><img src="{base}/drafts/img/draft-b-launch-cohorts.png" alt="Draft B, launch-year cohorts: reach rate by release year"><figcaption>Draft B · launch-year cohorts</figcaption></figure>
-      <figure><img src="{base}/drafts/img/draft-c-localization.png" alt="Draft C, localization ladder: reach rate by language count, all games versus RPG $10 to $20"><figcaption>Draft C · localization ladder</figcaption></figure>
-    </div>
+    <p class="eyebrow">Put the comparison to the test</p>
+    <h2>A smaller peer group is not always a stronger answer</h2>
+    <p class="lede">Build a peer group, see how its reach rate changes, then check release year and language support. Read the sample size alongside every rate: more specific comparisons can also be less certain.</p>
+    <PeerLab />
   </section>
 
   <footer>
     <p class="eyebrow">Team</p>
     <p>Rongzhi Chen · Lawrence Liao · Jack (Changming) Liu · Harvard CS1710, Fall 2026</p>
-    <p class="src">Data: <a href="https://www.kaggle.com/datasets/fronkongames/steam-games-dataset">Steam Games Dataset</a> (Kaggle; Steam API and SteamSpy), 125,855 games, of which 99,754 have an owner estimate and a genre. Code and pipeline: <a href="https://github.com/rongzhichen/cs1710-steam-reach">github.com/rongzhichen/cs1710-steam-reach</a>. Prototype V1, SvelteKit build.</p>
+    <p class="src">Data: <a href="https://www.kaggle.com/datasets/fronkongames/steam-games-dataset">Steam Games Dataset</a> (Kaggle; Steam API and SteamSpy), 125,855 games, of which 99,754 have an owner estimate and a genre. Code and pipeline: <a href="https://github.com/rongzhichen/cs1710-steam-reach">github.com/rongzhichen/cs1710-steam-reach</a>. Prototype V2 · interactive peer comparisons.</p>
   </footer>
 </div>

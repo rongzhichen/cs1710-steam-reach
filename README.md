@@ -42,6 +42,12 @@ python3 pipeline/build_data.py
 
 ## Running locally
 
+Prototype II adds three interactive peer-analysis views with shared genre, price,
+and owner-threshold controls. See [PROTOTYPE-2.md](PROTOTYPE-2.md) for the changes,
+five-minute demo sequence, and process-book preparation notes. Run
+`node --test tests/analysis.test.js` to check the statistical edge cases and
+published data counts.
+
 The site is a SvelteKit app (Svelte 5, Vite, D3) built as a fully static site with
 `@sveltejs/adapter-static`. It needs Node 20 or newer.
 

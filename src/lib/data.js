@@ -39,8 +39,8 @@ let cache = null;
 export function loadData(base = '') {
   if (!cache) {
     cache = Promise.all([
-      fetch(`${base}/data/games.json`).then(r => r.json()),
-      fetch(`${base}/data/summary.json`).then(r => r.json())
+      fetch(`${base}/data/games.json`).then(r => { if (!r.ok) throw new Error('Game data request failed'); return r.json(); }),
+      fetch(`${base}/data/summary.json`).then(r => { if (!r.ok) throw new Error('Summary request failed'); return r.json(); })
     ]).then(([j, summary]) => {
       const rnd = d3.randomLcg(42);
       // cols: name, price, ownerLow, genreMask, posPct, hours, platforms, languages, reviews, year, earlyAccess

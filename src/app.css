@@ -98,3 +98,20 @@ nav.toc a:hover{color:var(--hit);border-color:var(--hit)}
 .drafts figure{margin:0}
 .drafts img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:#fdfdfb}
 .drafts figcaption{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:4px}
+
+/* Prototype II: linked peer analysis, readable on small screens. */
+.lab-panel{margin-top:24px;padding:24px}
+.lab-panel h2{font-size:24px}
+.trait-toggles{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.trait-toggles label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:20px;padding:8px 14px;cursor:pointer;background:var(--bg)}
+.trait-toggles input{accent-color:var(--sel);width:16px;height:16px}
+.lab-result{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;background:var(--sel-soft);border-left:3px solid var(--sel);padding:14px 18px;margin:12px 0}
+.lab-result strong{font-family:var(--display);font-size:32px}
+.sample-warning{flex-basis:100%;font-weight:600}
+.rate-scroll{overflow-x:auto;margin:20px 0 8px}
+.panel .rate-chart{min-width:740px;overflow:hidden}
+.panel .rate-chart text{font-size:12px}
+.rate-data summary{cursor:pointer;color:var(--hit);padding:8px 0}
+.peer-controls select{max-width:220px}
+:focus-visible{outline:3px solid var(--hit);outline-offset:3px}
+@media(max-width:600px){.lab-panel{padding:16px}.bar label{flex-wrap:wrap}.lab-result strong{font-size:27px}}

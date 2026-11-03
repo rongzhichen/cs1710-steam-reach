@@ -5,3 +5,7 @@ export const threshold = writable(100000);
 
 /** Loaded dataset ({G, GEN, meta, summary}) or null until the page has fetched it. */
 export const dataset = writable(null);
+
+// Shared peer selection links the comparison tool and the V2 views.
+export const peerGenre = writable(null);
+export const peerBand = writable(null);
