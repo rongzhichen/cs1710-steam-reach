@@ -42,9 +42,11 @@ python3 pipeline/build_data.py
 
 ## Running locally
 
-Prototype II adds three interactive peer-analysis views with shared genre, price,
-and owner-threshold controls. See [PROTOTYPE-2.md](PROTOTYPE-2.md) for the changes,
-five-minute demo sequence, and process-book preparation notes. Run
+Prototype II added three interactive peer-analysis views with shared genre, price,
+and owner-threshold controls (see [PROTOTYPE-2.md](PROTOTYPE-2.md)). Prototype III
+acts on the MS10 test sessions: small-sample guards and denominators in every view,
+colour keys, shareable URL state (`?g=&p=&t=&f=&b=`), named games in the explorer,
+a threshold-sensitivity panel and worked-example presets. Run
 `node --test tests/analysis.test.js` to check the statistical edge cases and
 published data counts.
 

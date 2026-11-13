@@ -1935,6 +1935,11 @@
    "n": 1577,
    "definition": "paid games priced ($20, $40]: share with >=100k owners"
   },
+  "counts_rate_free": {
+   "value": 0.155,
+   "n": 9484,
+   "definition": "free games: share with >=100k owners"
+  },
   "genre_rate_all_20_40": {
    "value": 0.1795,
    "n": 1577,

@@ -193,6 +193,7 @@ def main():
     rpg_10_20_succ = [g for g in succ if g["mask"] >> rpg & 1 and g["band"] == 3]
     indie = gidx.get("Indie")
     paid_indie = [g for g in paid if g["mask"] >> indie & 1]
+    free_games = [g for g in games if g["price"] == 0]
     share = lambda s, f: round(sum(f(g) for g in s) / len(s), 4) if s else None
     story = dict(
         hook_successfulCostAtMost10=dict(value=share(succ, lambda g: g["price"] <= 10), n=len(succ),
@@ -201,6 +202,8 @@ def main():
                              definition="paid games priced ($0, $5]: share with >=100k owners"),
         counts_rate_20_40=dict(value=share(paid_20_40, lambda g: g["lo"] >= thr), n=len(paid_20_40),
                                definition="paid games priced ($20, $40]: share with >=100k owners"),
+        counts_rate_free=dict(value=share(free_games, lambda g: g["lo"] >= thr), n=len(free_games),
+                              definition="free games: share with >=100k owners"),
         genre_rate_all_20_40=dict(value=share(all_20_40, lambda g: g["lo"] >= thr), n=len(all_20_40),
                                   definition="all genres, ($20, $40]: share with >=100k owners"),
         genre_rate_rpg_20_40=dict(value=share(rpg_20_40, lambda g: g["lo"] >= thr), n=len(rpg_20_40),

@@ -1,38 +1,46 @@
 <script>
+  // Horizontal rate chart with Wilson whiskers, shared by the peer-lab views.
+  // V3: every chart declares its own colour key (`legend`), and `fit` rescales the axis to the data.
   import { scaleLinear, format } from 'd3';
   import { fmt } from '$lib/data.js';
-  let { rows, title, baseline = null, xLabel = 'Games reaching the selected owner threshold (%)', yLabel = 'Comparison group' } = $props();
+  let { rows, title, baseline = null, xLabel = 'Games reaching the selected owner threshold (%)', yLabel = 'Comparison group', legend = [], fit = false } = $props();
   const percent = format('.1%');
   const height = $derived(rows.length * 52 + 96);
-  const x = scaleLinear().domain([0, 1]).range([220, 700]);
+  // Fit-to-data: axis ends at the next 10% above the widest interval, never below 10%.
+  const maxV = $derived(fit ? Math.max(0.1, Math.ceil(Math.max(0, ...rows.map(r => (r.n ? r.high : 0))) * 10 + 1e-9) / 10) : 1);
+  const x = $derived(scaleLinear().domain([0, maxV]).range([220, 700]));
+  const ticks = $derived([0, 0.25, 0.5, 0.75, 1].map(t => t * maxV));
 </script>
 
+{#if legend.length}
+  <div class="legend chart-key" aria-label="Colour key">{#each legend as l}<span style="--c:{l.color}">{l.label}</span>{/each}</div>
+{/if}
 <div class="rate-scroll">
   <svg class="rate-chart" viewBox="0 0 900 {height}" role="img" aria-label={title}>
     <title>{title}. Exact rates and counts are available in the table below.</title>
     <text x="205" y="17" text-anchor="end" font-weight="600">{yLabel}</text>
     <text x="716" y="17" font-weight="600">Rate · sample size (n)</text>
     <line x1={x(0)} x2={x(0)} y1="30" y2={height - 56} stroke="var(--fg2)" />
-    <line x1={x(0)} x2={x(1)} y1={height - 56} y2={height - 56} stroke="var(--fg2)" />
-    <text x={(x(0) + x(1)) / 2} y={height - 5} text-anchor="middle" font-weight="600">{xLabel}</text>
-    {#each [0, .25, .5, .75, 1] as tick}
+    <line x1={x(0)} x2={x(maxV)} y1={height - 56} y2={height - 56} stroke="var(--fg2)" />
+    <text x={(x(0) + x(maxV)) / 2} y={height - 5} text-anchor="middle" font-weight="600">{xLabel}{fit ? ' · axis fitted to data' : ''}</text>
+    {#each ticks as tick}
       <line x1={x(tick)} x2={x(tick)} y1="30" y2={height - 56} stroke="var(--line)" />
-      <text x={x(tick)} y={height - 35} text-anchor="middle">{format('.0%')(tick)}</text>
+      <text x={x(tick)} y={height - 35} text-anchor="middle">{format(maxV < 1 ? '.1%' : '.0%')(tick)}</text>
     {/each}
     {#if baseline !== null}
-      <line x1={x(baseline)} x2={x(baseline)} y1="30" y2={height - 56} stroke="var(--fg)" stroke-dasharray="4 4" />
+      <line x1={x(Math.min(baseline, maxV))} x2={x(Math.min(baseline, maxV))} y1="30" y2={height - 56} stroke="var(--fg)" stroke-dasharray="4 4" />
     {/if}
     {#each rows as row, i}
       <g transform="translate(0,{i * 52 + 48})">
         <title>{row.label}: {row.n ? `${percent(row.rate)}; ${fmt(row.hits)} of ${fmt(row.n)} games; 95% Wilson interval ${percent(row.low)} to ${percent(row.high)}` : 'No matching games'}</title>
-        <text x="205" y="4" text-anchor="end">{row.label}</text>
+        <text x="205" y="4" text-anchor="end" fill={row.muted ? 'var(--muted)' : 'var(--fg)'}>{row.label}</text>
         {#if row.n}
-          <rect x={x(0)} y="-12" width={x(row.rate) - x(0)} height="24" rx="3" fill={row.color ?? 'var(--sel)'} />
-          <line x1={x(row.low)} x2={x(row.high)} y1="0" y2="0" stroke="var(--fg)" stroke-width="2" />
-          <line x1={x(row.low)} x2={x(row.low)} y1="-5" y2="5" stroke="var(--fg)" />
-          <line x1={x(row.high)} x2={x(row.high)} y1="-5" y2="5" stroke="var(--fg)" />
+          <rect x={x(0)} y="-12" width={Math.max(0, x(Math.min(row.rate, maxV)) - x(0))} height="24" rx="3" fill={row.color ?? 'var(--sel)'} />
+          <line x1={x(Math.min(row.low, maxV))} x2={x(Math.min(row.high, maxV))} y1="0" y2="0" stroke="var(--fg)" stroke-width="2" />
+          <line x1={x(Math.min(row.low, maxV))} x2={x(Math.min(row.low, maxV))} y1="-5" y2="5" stroke="var(--fg)" />
+          <line x1={x(Math.min(row.high, maxV))} x2={x(Math.min(row.high, maxV))} y1="-5" y2="5" stroke="var(--fg)" />
         {/if}
-        <text x="716" y="4">{row.n ? percent(row.rate) : 'No data'} · n={fmt(row.n)}{row.n > 0 && row.n < 200 ? ' *' : ''}</text>
+        <text x="716" y="4" fill={row.muted ? 'var(--muted)' : 'var(--fg)'}>{row.n ? percent(row.rate) : 'No data'} · n={fmt(row.n)}{row.n > 0 && row.n < 200 ? ' *' : ''}</text>
       </g>
     {/each}
   </svg>

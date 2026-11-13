@@ -2,7 +2,9 @@
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
   import { loadData, fmt } from '$lib/data.js';
-  import { dataset } from '$lib/stores.js';
+  import { dataset, threshold, peerGenre, peerBand, ladderFlags, exploreState } from '$lib/stores.js';
+  import { parseState, serializeState } from '$lib/urlState.js';
+  import { replaceState } from '$app/navigation';
   import StoryNum from '$lib/components/StoryNum.svelte';
   import StoryHook from '$lib/components/StoryHook.svelte';
   import StoryCounts from '$lib/components/StoryCounts.svelte';
@@ -15,7 +17,23 @@
 
   // The game rows are fetched on the client, not in a load function, so the 4 MB of data is never
   // inlined into the prerendered HTML. The prose numbers below fall back to the published values.
-  onMount(() => { loadData(base).then(d => dataset.set(d)).catch(() => { loadError = 'The game data could not be loaded. Please reload the page to try again.'; }); });
+  onMount(() => {
+    loadData(base).then(d => dataset.set(d)).catch(() => { loadError = 'The game data could not be loaded. Please reload the page to try again.'; });
+    // Shareable selections (V3): restore the stores from the query string, then mirror every change back.
+    const init = parseState(location.search);
+    threshold.set(init.threshold); peerGenre.set(init.genre); peerBand.set(init.band); ladderFlags.set(init.flags); exploreState.set(init.explore);
+    let ready = false, timer;
+    const unsub = [threshold, peerGenre, peerBand, ladderFlags, exploreState].map(st => st.subscribe(() => {
+      if (!ready) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const q = serializeState({ threshold: $threshold, genre: $peerGenre, band: $peerBand, flags: $ladderFlags, explore: $exploreState });
+        if (q !== location.search) replaceState(location.pathname + q + location.hash, {});
+      }, 150);
+    }));
+    ready = true;
+    return () => unsub.forEach(u => u());
+  });
   const nGames = $derived(fmt($dataset?.meta?.N ?? 99754));
 </script>
 
@@ -41,6 +59,7 @@
     <p><strong>The setting.</strong> You are a solo developer or a team of a few people, deciding the genre, price, scope and languages of your next Steam game, with one shot at it. You know the hits in your genre. You have never seen the long tail of games that sold nothing, so your sense of what works is shaped by the games that survived. The first number we found speaks to exactly that instinct.</p>
     <p class="stat"><StoryNum k="hook_successfulCostAtMost10" fallback="85%" /></p>
     <p class="stat-l">of games that reached 100,000 owners cost $10 or less, free games included.</p>
+    <p class="caption">Throughout the story, "successful" means an estimated owner band starting at 100,000 or more. That line is our choice, not a fact about games; the tools at the end of the page let you move it.</p>
     <p>Look only at the winners and the lesson writes itself: price low. Half of all successful games sit on the $0 to $5 shelf alone. But abundance on a shelf is not the same as a good chance of success on it. The question a developer should ask is not <em>where are the successful games</em> but <em>how often does a game like mine succeed</em>.</p>
     <StoryHook />
     <p class="caption">Share of the <StoryNum k="longTail_reach100k" as="n" fallback="99,754" />-game store's successful titles (owner band ≥ 100k) on each price shelf. Snapshot prices.</p>
@@ -51,6 +70,7 @@
     <p class="curio">You ask: so I should price low?</p>
     <h2>Counts can give the wrong impression</h2>
     <p>Read each shelf as a proportion of itself and the picture flips. Among paid games, <StoryNum k="counts_rate_0_5" fallback="7%" /> of titles priced up to $5 reached 100,000 owners. On the $20 to $40 shelf the rate is <StoryNum k="counts_rate_20_40" fallback="18%" />. The cheap shelf holds the most successful games only because it holds <StoryNum k="counts_rate_0_5" as="n" fallback="61,319" /> games in total.</p>
+    <p>Free games are a case of their own. <StoryNum k="counts_rate_free" fallback="16%" /> of the <StoryNum k="counts_rate_free" as="n" fallback="9,484" /> free games reach 100,000 owners, second only to the $20 to $40 shelf and more than double the $0 to $5 rate. Removing the price removes the barrier to trying a game, which is a different mechanism from whatever separates the paid shelves, so the story treats free as its own category rather than as the cheapest end of a price scale.</p>
     <StoryCounts />
     <p class="caption">Grey: where the successful games are, as a share of all successful games. Blue: the reach rate inside each shelf. Only <StoryNum k="longTail_reach100k" as="pct1" fallback="8.7%" /> of all games reach 100k, and <StoryNum k="longTail_under20k" fallback="75%" /> never pass 20,000 owners.</p>
     <div class="caveat">This does not mean raising a price raises reach. Pricier games are made by different teams with different budgets. It means the right comparison is a rate among comparable games, not a count of visible hits.</div>
@@ -84,7 +104,7 @@
   <section id="tool">
     <p class="eyebrow">6 · Solution and next steps</p>
     <h2>Turn the story into a comparison tool</h2>
-    <p class="lede">Pick a genre in the bubbles, then a price band on the shelves. Each click narrows the next view to the games a developer would actually compare against, and every number is shown next to the same number for all successful games.</p>
+    <p class="lede">Pick a genre in the bubbles, then a price band on the shelves. Each click narrows the next view to the games a developer would actually compare against, and every number is shown next to the same number for all successful games. The selection is written into the page address, so a peer group can be sent as a link.</p>
     <div class="steps">
       <div><b>1 · Choose your peers.</b> Pick the genre you are committing to and the price band you are considering, not the whole store.</div>
       <div><b>2 · Read the rate, not the count.</b> The shelf with the most successful games is rarely the shelf where a game most often succeeds.</div>
@@ -102,15 +122,15 @@
   </section>
 
   <section id="next">
-    <p class="eyebrow">Put the comparison to the test</p>
+    <p class="eyebrow">Put the comparison to the test · peer ladder, threshold sensitivity, release year, languages</p>
     <h2>A smaller peer group is not always a stronger answer</h2>
-    <p class="lede">Build a peer group, see how its reach rate changes, then check release year and language support. Read the sample size alongside every rate: more specific comparisons can also be less certain.</p>
+    <p class="lede">Build a peer group, see how its reach rate changes, then test it at every threshold and check release year and language support. Read the sample size alongside every rate: more specific comparisons can also be less certain.</p>
     <PeerLab />
   </section>
 
   <footer>
     <p class="eyebrow">Team</p>
     <p>Rongzhi Chen · Lawrence Liao · Jack (Changming) Liu · Harvard CS1710, Fall 2026</p>
-    <p class="src">Data: <a href="https://www.kaggle.com/datasets/fronkongames/steam-games-dataset">Steam Games Dataset</a> (Kaggle; Steam API and SteamSpy), 125,855 games, of which 99,754 have an owner estimate and a genre. Code and pipeline: <a href="https://github.com/rongzhichen/cs1710-steam-reach">github.com/rongzhichen/cs1710-steam-reach</a>. Prototype V2 · interactive peer comparisons.</p>
+    <p class="src">Data: <a href="https://www.kaggle.com/datasets/fronkongames/steam-games-dataset">Steam Games Dataset</a> (Kaggle; Steam API and SteamSpy), 125,855 games, of which 99,754 have an owner estimate and a genre. Code and pipeline: <a href="https://github.com/rongzhichen/cs1710-steam-reach">github.com/rongzhichen/cs1710-steam-reach</a>. Prototype V3 · revised after the MS10 test sessions.</p>
   </footer>
 </div>

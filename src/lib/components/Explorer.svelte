@@ -1,23 +1,37 @@
 <script>
   // Explore mode: brushable price-versus-owners canvas scatter with linked genre and trait panels.
+  // V3 changes from the test session: every panel names its denominator, bars from fewer than 200
+  // games carry *, a brush entirely above the success line is called out, the brushed games are
+  // listed by name, the brush can be set from the keyboard, and the state is shareable by URL.
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
-  import { threshold, dataset } from '$lib/stores.js';
+  import { threshold, dataset, exploreState } from '$lib/stores.js';
   import { LOWS, LAB, TRAITS, fmt, pct, traitShare } from '$lib/data.js';
   import { showTip, hideTip } from '$lib/tip.js';
   import ThresholdSelect from './ThresholdSelect.svelte';
+  import CopyLink from './CopyLink.svelte';
 
-  const PMAX = 60, M = { l: 64, r: 14, t: 10, b: 34 };
-  let show = $state('all');
-  let genre = $state(null);
+  const PMAX = 60, M = { l: 64, r: 14, t: 10, b: 34 }, SMALL = 200;
+  const show = $derived($exploreState.show);
+  const genre = $derived($exploreState.genre);
   let sel = $state(null);            // brushed games, or null when no brush
   let plotEl, canvas, overlay, genreSvg, traitSvg;
   let W = 0, H = 0, x, y, ctx, brush, ov, brushG;
+  // Keyboard path into the brush (test-session item 10): numeric bounds applied as a brush.
+  let kPriceLo = $state(0), kPriceHi = $state(20), kBandLo = $state(0), kBandHi = $state(3);
 
   const GEN = $derived($dataset?.GEN ?? []);
   const visible = (g, thr) => show === 'all' || g.lo >= thr;
   const px = g => Math.min(g.price, PMAX);
   const yPos = g => y(g.bandIdx) + y.bandwidth() * (0.5 + g.jit * 0.9);
+  const short = name => name.replace('Massively Multiplayer', 'MMO');
+  const setGenre = i => { $exploreState = { ...$exploreState, genre: i }; };
+  const setShow = v => { $exploreState = { ...$exploreState, show: v }; };
+
+  // Brush extent as fractions of the plot area, so a shared link restores it at any screen size.
+  const toFrac = ([[x0, y0], [x1, y1]]) => [(x0 - M.l) / (W - M.l - M.r), (y0 - M.t) / (H - M.t - M.b), (x1 - M.l) / (W - M.l - M.r), (y1 - M.t) / (H - M.t - M.b)];
+  const toPx = ([fx0, fy0, fx1, fy1]) => [[M.l + fx0 * (W - M.l - M.r), M.t + fy0 * (H - M.t - M.b)], [M.l + fx1 * (W - M.l - M.r), M.t + fy1 * (H - M.t - M.b)]];
+  const sameFrac = (a, b) => (a === null && b === null) || (a && b && a.every((v, i) => Math.abs(v - b[i]) < 0.002));
 
   // Build scales, axes and the brush for the current plot size.
   function setup() {
@@ -40,8 +54,9 @@
     brush = d3.brush().extent([[M.l, M.t], [W - M.r, H - M.b]]).on('brush end', brushed);
     brushG = ov.append('g').attr('class', 'brush').call(brush);
     ov.select('.brush .selection').attr('fill', 'var(--sel)').attr('fill-opacity', 0.08).attr('stroke', 'var(--sel)');
-    sel = null;
     draw();
+    const stored = $exploreState.brush;
+    if (stored) brushG.call(brush.move, toPx(stored)); else sel = null;
   }
 
   function draw() {
@@ -65,13 +80,23 @@
   }
 
   function brushed({ selection }) {
+    const frac = selection ? toFrac(selection) : null;
+    if (!sameFrac(frac, $exploreState.brush)) $exploreState = { ...$exploreState, brush: frac };
     const d = $dataset; if (!d) return;
     if (!selection) { sel = null; return; }
     const [[x0, y0], [x1, y1]] = selection, thr = $threshold;
     sel = d.G.filter(g => visible(g, thr) && x(px(g)) >= x0 && x(px(g)) <= x1 && yPos(g) >= y0 && yPos(g) <= y1);
   }
 
-  function clear() { if (brushG) brushG.call(brush.move, null); sel = null; genre = null; }
+  function clear() { if (brushG) brushG.call(brush.move, null); sel = null; $exploreState = { brush: null, genre: null, show: $exploreState.show }; }
+
+  // Apply the numeric bounds as a brush: price range on x, owner bands (inclusive) on y.
+  function applyBounds() {
+    if (!brushG || !x) return;
+    const p0 = Math.max(0, Math.min(kPriceLo, kPriceHi)), p1 = Math.min(PMAX, Math.max(kPriceLo, kPriceHi, p0 + 0.5));
+    const b0 = Math.min(kBandLo, kBandHi), b1 = Math.max(kBandLo, kBandHi);
+    brushG.call(brush.move, [[x(p0), y(b1)], [x(p1), y(b0) + y.bandwidth()]]);
+  }
 
   onMount(() => {
     const ro = new ResizeObserver(() => { clearTimeout(t); t = setTimeout(setup, 150); });
@@ -87,22 +112,32 @@
     void show; void $threshold; void $dataset;
     if (brushG && brushG.node()) { const s = d3.brushSelection(brushG.node()); if (s) brushed({ selection: s }); }
   });
+  // A brush restored from the URL (or cleared elsewhere) moves the on-screen brush to match.
+  $effect(() => {
+    const stored = $exploreState.brush;
+    if (!brushG || !brushG.node() || !W) return;
+    const cur = d3.brushSelection(brushG.node());
+    if (!sameFrac(stored, cur ? toFrac(cur) : null)) brushG.call(brush.move, stored ? toPx(stored) : null);
+  });
 
   // Linked panels
   const panel = $derived.by(() => {
     const d = $dataset; if (!d) return null;
     const thr = $threshold;
     const set = sel ?? d.G.filter(g => visible(g, thr)), all = d.G;
-    const okShare = set.length ? d3.mean(set, g => (g.lo >= thr ? 1 : 0)) : 0;
-    const genres = d.GEN.map((name, i) => ({ i, name: name.replace('Massively Multiplayer', 'MMO'), s: set.length ? d3.mean(set, g => (g.mask >> i) & 1) : 0, b: d3.mean(all, g => (g.mask >> i) & 1) }));
+    const hits = set.filter(g => g.lo >= thr).length;
+    const okShare = set.length ? hits / set.length : 0;
+    const genres = d.GEN.map((name, i) => ({ i, name: short(name), s: set.length ? d3.mean(set, g => (g.mask >> i) & 1) : 0, b: d3.mean(all, g => (g.mask >> i) & 1), n: set.length }));
     const tset = genre === null ? set : set.filter(g => (g.mask >> genre) & 1);
-    const traits = TRAITS.map((t, i) => ({ i, k: t.k, s: traitShare(tset, t), b: traitShare(all, t) }));
-    return { set, okShare, genres, traits };
+    const traits = TRAITS.map((t, i) => { const rel = t.rev ? tset.filter(g => g.pos >= 0) : tset; return { i, k: t.k, s: traitShare(tset, t), b: traitShare(all, t), n: rel.length }; });
+    const top = sel ? [...set].sort((a, b) => b.lo - a.lo || b.rev - a.rev).slice(0, 12) : [];
+    return { set, hits, okShare, genres, traits, tn: tset.length, top, aboveLine: !!sel && set.length > 0 && hits === set.length && show === 'all' };
   });
 
   $effect(() => {
     const p = panel; if (!p || !genreSvg || !traitSvg) return;
     const gsel = genre;
+    const star = n => (n > 0 && n < SMALL ? ' *' : '');
     const gx = d3.scaleLinear().domain([0, 1]).range([120, 400]); const gy = d3.scaleBand().domain(p.genres.map(q => q.i)).range([6, 256]).paddingInner(0.3);
     const svg = d3.select(genreSvg); const join = svg.selectAll('g.gbar').data(p.genres, q => q.i);
     const ent = join.enter().append('g').attr('class', 'gbar').attr('tabindex', 0).attr('role', 'button');
@@ -111,61 +146,91 @@
     ent.append('rect').attr('class', 'v').attr('x', gx(0)).attr('rx', 3);
     ent.append('line').attr('class', 'b').attr('stroke', 'var(--base)').attr('stroke-width', 2);
     ent.append('text').attr('class', 'n mono').attr('dy', '.32em');
-    const toggle = q => { genre = genre === q.i ? null : q.i; };
+    const toggle = q => setGenre(gsel === q.i ? null : q.i);
     const all2 = ent.merge(join).attr('transform', q => `translate(0,${gy(q.i)})`)
+      .attr('aria-pressed', q => String(gsel === q.i))
+      .attr('aria-label', q => `${q.name}: ${pct(q.s)} of the ${fmt(q.n)} selected games, ${pct(q.b)} of all games`)
       .on('click', (e, q) => toggle(q))
       .on('keydown', (e, q) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(q); } })
-      .on('mousemove', (e, q) => showTip(e, `${q.name}\nselection ${pct(q.s)} · all games ${pct(q.b)}`)).on('mouseleave', hideTip);
+      .on('mousemove', (e, q) => showTip(e, `${q.name}\nselection ${pct(q.s)} of ${fmt(q.n)}${star(q.n)} · all games ${pct(q.b)}`)).on('mouseleave', hideTip);
     all2.select('rect.hit').attr('y', -3).attr('height', gy.bandwidth() + 6).attr('stroke', q => (gsel === q.i ? 'var(--sel)' : 'none')).attr('fill', q => (gsel === q.i ? 'var(--sel-soft)' : 'transparent'));
     all2.select('text').text(q => q.name).attr('y', gy.bandwidth() / 2).attr('font-weight', q => (gsel === q.i ? 600 : 400));
     all2.select('rect.v').attr('y', 0).attr('height', gy.bandwidth()).attr('width', q => Math.max(0, gx(q.s) - gx(0))).attr('fill', q => (gsel === q.i ? 'var(--sel)' : 'var(--hit)'));
     all2.select('line.b').attr('x1', q => gx(q.b)).attr('x2', q => gx(q.b)).attr('y1', -2).attr('y2', gy.bandwidth() + 2);
-    all2.select('text.n').attr('x', q => gx(q.s) + 5).attr('y', gy.bandwidth() / 2).text(q => pct(q.s)).attr('fill', 'var(--fg2)');
+    all2.select('text.n').attr('x', q => gx(q.s) + 5).attr('y', gy.bandwidth() / 2).text(q => pct(q.s) + star(q.n)).attr('fill', 'var(--fg2)');
 
     const ty = d3.scaleBand().domain(p.traits.map(q => q.i)).range([6, 134]).paddingInner(0.3); const tx = d3.scaleLinear().domain([0, 1]).range([160, 400]);
     const ts = d3.select(traitSvg); const tsel = ts.selectAll('g.tbar').data(p.traits, q => q.i);
-    const tent = tsel.enter().append('g').attr('class', 'tbar');
+    const tent = tsel.enter().append('g').attr('class', 'tbar').attr('tabindex', 0).attr('role', 'img');
     tent.append('text').attr('x', 152).attr('text-anchor', 'end').attr('dy', '.32em');
     tent.append('rect').attr('x', tx(0)).attr('rx', 3).attr('fill', 'var(--hit)');
     tent.append('line').attr('stroke', 'var(--base)').attr('stroke-width', 2);
     tent.append('text').attr('class', 'n mono').attr('dy', '.32em').attr('fill', 'var(--fg2)');
-    const tall = tent.merge(tsel).attr('transform', q => `translate(0,${ty(q.i)})`).on('mousemove', (e, q) => showTip(e, `${q.k}\nselection ${pct(q.s)} · all games ${pct(q.b)}`)).on('mouseleave', hideTip);
+    const tall = tent.merge(tsel).attr('transform', q => `translate(0,${ty(q.i)})`)
+      .attr('aria-label', q => `${q.k}: ${pct(q.s)} of ${fmt(q.n)} games, ${pct(q.b)} of all games`)
+      .on('mousemove', (e, q) => showTip(e, `${q.k}\nselection ${pct(q.s)} of ${fmt(q.n)}${star(q.n)} · all games ${pct(q.b)}`)).on('mouseleave', hideTip);
     tall.select('text').text(q => q.k).attr('y', ty.bandwidth() / 2);
     tall.select('rect').attr('y', 0).attr('height', ty.bandwidth()).attr('width', q => Math.max(0, tx(q.s) - tx(0)));
     tall.select('line').attr('x1', q => tx(q.b)).attr('x2', q => tx(q.b)).attr('y1', -2).attr('y2', ty.bandwidth() + 2);
-    tall.select('text.n').attr('x', q => tx(q.s) + 5).attr('y', ty.bandwidth() / 2).text(q => pct(q.s));
+    tall.select('text.n').attr('x', q => tx(q.s) + 5).attr('y', ty.bandwidth() / 2).text(q => pct(q.s) + star(q.n));
   });
 </script>
 
 <div class="bar">
   <ThresholdSelect label="Success line at owner band ≥" />
-  <label>Show <select id="bx-show" bind:value={show}><option value="all">all games</option><option value="ok">successful only</option></select></label>
+  <label>Show <select id="bx-show" value={show} onchange={e => setShow(e.currentTarget.value)}><option value="all">all games</option><option value="ok">successful only</option></select></label>
   <button id="bx-clear" onclick={clear}>Clear selection</button>
-  <div class="status">
+  <div class="status" aria-live="polite">
     {#if panel}
-      {#if sel}selected <b>{fmt(panel.set.length)}</b> games · {pct(panel.okShare)} successful{:else}no brush: showing {fmt(panel.set.length)} games{/if}
+      {#if sel}selected <b>{fmt(panel.set.length)}</b> games · {fmt(panel.hits)} successful ({pct(panel.okShare)}){:else}no brush: showing {fmt(panel.set.length)} games{/if}
     {/if}
   </div>
+  <CopyLink />
 </div>
+<p class="note scope-note">The success line here is the shared threshold; the opening story stays at 100,000 owners. These panels report shares with their denominators but no confidence intervals. For intervals, build the same group in the peer lab below.</p>
 {#if !$dataset}<p class="loading">Loading…</p>{/if}
 <div class="grid two">
   <div class="panel">
     <h3>Game-level scatter</h3>
     <p class="q">Price (x) against estimated-owner band (y). <em>Drag to brush a region.</em> Dots above the dashed line count as successful.</p>
-    <div class="plot" id="bx-plot" bind:this={plotEl}><canvas id="bx-canvas" bind:this={canvas}></canvas><svg id="bx-overlay" bind:this={overlay}></svg></div>
+    <div class="plot" id="bx-plot" bind:this={plotEl}><canvas id="bx-canvas" bind:this={canvas}></canvas><svg id="bx-overlay" bind:this={overlay} aria-label="Scatter of games by price and owner band, with a draggable brush"></svg></div>
     <div class="legend"><span style="--c:var(--dot)">below success line</span><span style="--c:var(--hit)">successful</span><span style="--c:var(--sel)">highlighted genre</span></div>
+    <details class="kbd-brush">
+      <summary>Select a region by numbers (keyboard alternative to dragging)</summary>
+      <div class="kbd-form">
+        <label>Price from $<input type="number" min="0" max="60" step="1" bind:value={kPriceLo} /></label>
+        <label>to $<input type="number" min="0" max="60" step="1" bind:value={kPriceHi} /></label>
+        <label>Owner band from <select bind:value={kBandLo}>{#each LAB as l, i}<option value={i}>{l}</option>{/each}</select></label>
+        <label>to <select bind:value={kBandHi}>{#each LAB as l, i}<option value={i}>{l}</option>{/each}</select></label>
+        <button type="button" onclick={applyBounds}>Apply selection</button>
+      </div>
+    </details>
+    {#if panel?.aboveLine}
+      <p class="sample-banner" role="status"><b>Every game in this brush is above the success line</b>, so "{pct(1)} successful" is true by construction. Drag the brush across the dashed line to compare games that did and did not reach it.</p>
+    {:else if sel && panel && panel.set.length > 0 && panel.set.length < SMALL}
+      <p class="sample-banner" role="status"><b>Small selection.</b> The panels on the right are built from {fmt(panel.set.length)} games; shares marked * can move by many points with a few titles.</p>
+    {:else if sel && panel && !panel.set.length}
+      <p class="sample-banner" role="status">No games in this brush with the current filter.</p>
+    {/if}
+    {#if panel && panel.top.length}
+      <h3 class="sub">Named games in the brush · top {panel.top.length} by owner band</h3>
+      <div class="tscroll"><table id="bx-table">
+        <thead><tr><th>Game</th><th>Price</th><th>Owners ≥</th><th>Positive</th><th>Genres</th></tr></thead>
+        <tbody>{#each panel.top as g}<tr><td>{g.name || '(unnamed)'}</td><td class="mono">{g.price ? '$' + g.price.toFixed(2) : 'Free'}</td><td class="mono">{d3.format('.2~s')(g.lo)}</td><td class="mono">{g.pos >= 0 ? g.pos + '%' : '–'}</td><td>{GEN.map((n, i) => ((g.mask >> i) & 1 ? short(n) : null)).filter(Boolean).join(', ')}</td></tr>{/each}</tbody>
+      </table></div>
+    {/if}
   </div>
   <div class="col">
     <div class="panel">
-      <h3>Genre mix of the selection</h3>
-      <p class="q">Share of selected games in each genre. The black tick is the same share across all games. <em>Click a bar to highlight the genre.</em></p>
-      <svg bind:this={genreSvg} id="bx-genres" viewBox="0 0 420 262"></svg>
+      <h3>Genre mix of the selection {#if panel}· n = {fmt(panel.set.length)}{/if}</h3>
+      <p class="q">Share of the {#if panel}<em>{fmt(panel.set.length)}</em>{/if} selected games in each genre. The black tick is the same share across all {#if panel}{fmt($dataset.G.length)}{/if} games. <em>Click a bar to highlight the genre.</em></p>
+      <svg bind:this={genreSvg} id="bx-genres" viewBox="0 0 420 262" role="group" aria-label="Genre mix of the selection"></svg>
     </div>
     <div class="panel">
-      <h3>Traits of the selection</h3>
-      <p class="q" id="bx-tq">Share of <em>{genre === null ? 'selected games' : 'selected ' + GEN[genre] + ' games'}</em> meeting each condition, with the all-games tick for comparison.</p>
-      <svg bind:this={traitSvg} id="bx-traits" viewBox="0 0 420 140"></svg>
-      <p class="note">Games can carry several genres, so genre shares overlap. Review share only counts games with ≥50 reviews.</p>
+      <h3>Traits of the selection {#if panel}· n = {fmt(panel.tn)}{/if}</h3>
+      <p class="q" id="bx-tq">Share of the {#if panel}<em>{fmt(panel.tn)}</em>{/if} <em>{genre === null ? 'selected games' : 'selected ' + short(GEN[genre]) + ' games'}</em> meeting each condition, with the all-games tick for comparison.</p>
+      <svg bind:this={traitSvg} id="bx-traits" viewBox="0 0 420 140" role="group" aria-label="Traits of the selection"></svg>
+      <p class="note">Games can carry several genres, so genre shares overlap. Review share only counts games with ≥50 reviews. * = share from fewer than {SMALL} games. These are shares, not rates with intervals.</p>
     </div>
   </div>
 </div>
