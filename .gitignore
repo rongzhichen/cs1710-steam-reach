@@ -21,3 +21,7 @@ vite.config.js.timestamp-*
 # Process-book drafts, screenshots and earlier milestone outputs stay local.
 process-book/
 outputs/
+
+# Submission archives and Vite cache
+*.zip
+.vite/

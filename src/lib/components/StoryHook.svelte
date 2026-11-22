@@ -7,7 +7,9 @@
   $effect(() => {
     const t = $dataset?.summary?.byThreshold['100000'];
     if (!t || !svg) return;
-    bars(svg, t.price.map(r => ({ label: r.key, groups: [{ v: r.shareOfSuccess, cls: 'b-hit' }], note: `${fmt(r.hits)} games` })), { format: pct, left: 110 });
+    // Grey, not blue: the same bars return in the next chart, where blue is reserved for the rate.
+    bars(svg, t.price.map(r => ({ label: r.key, groups: [{ v: r.shareOfSuccess, cls: 'b-dot' }], note: `${fmt(r.hits)} games` })),
+      { format: pct, left: 110, legend: [{ label: 'share of all successful games', cls: 'b-dot' }] });
   });
 </script>
 

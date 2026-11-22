@@ -21,12 +21,12 @@ GitHub Pages: https://rongzhichen.github.io/cs1710-steam-reach/
 
 | Path | What it holds |
 |---|---|
-| `src/routes/+page.svelte` | The single-page site. Sections follow the six-panel MS6 storyboard. |
+| `src/routes/+page.svelte` | The single-page site. Part 1 is the story (the six-panel MS6 storyboard, each step ending in a takeaway); Part 2 is the three tools; a closing section restates the message. |
 | `src/routes/+layout.svelte`, `+layout.js` | Global stylesheet import; marks every route as prerendered. |
 | `src/app.css` | Design tokens (light and dark), fonts and all site styles. |
 | `src/lib/data.js` | Data loader, compact-row column mapping, owner bands, price bands, traits, formatters. |
 | `src/lib/stores.js` | The shared success-threshold store and the loaded dataset. |
-| `src/lib/components/` | One Svelte + D3 component per view: four story charts, `ComparisonTool.svelte`, `Explorer.svelte`, the threshold select and the prose-number span. |
+| `src/lib/components/` | One Svelte + D3 component per view: four story charts, the count-versus-rate tiles (`StoryFlip.svelte`), `ComparisonTool.svelte`, `Explorer.svelte`, the threshold select and the prose-number span. |
 | `static/data/` | Small derived JSON files the site loads (built by the pipeline). |
 | `static/drafts/` | The rendered drafts page and images for the views planned for V2. |
 | `pipeline/` | Python script that cleans the raw CSV and writes `static/data/`. |

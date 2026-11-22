@@ -71,7 +71,7 @@
   <p class="note">Genre and price stay in sync with the comparison tool above. These controls update every view below; the opening story uses a fixed 100k threshold. The fixed 0–100% axis keeps filter states comparable; "Fit axis to data" zooms in but lets the scale move as you add conditions.</p>
   <p class="presets">Try a worked example: <button type="button" onclick={presetRpg}>RPG · $10–20 · 5+ languages at 100k</button> <button type="button" onclick={presetInvert}>The ladder that inverts: RPG · $10–20 · all three conditions at 1M</button></p>
   <div class="panel lab-panel" id="peer-ladder">
-    <p class="eyebrow">Novel view · peer ladder</p>
+    <p class="eyebrow">Peer ladder · add one condition at a time</p>
     <h2>Describe your game. Watch the comparison change.</h2>
     <p>Each step keeps only games matching every condition so far. Add a condition to see both the reach rate and the number of remaining peers. Conditions are applied in the fixed order shown, whatever order you tick them, so only the final row is independent of ordering.</p>
     <div class="trait-toggles">
@@ -108,7 +108,7 @@
   <div class="panel lab-panel" id="localization">
     <p class="eyebrow">Check the context · language support</p>
     <h2>Does the language pattern hold among your peers?</h2>
-    <p>Grey bars show the store; orange bars show <strong>{peerLabel}</strong> within the same language group. Counts keep tiny groups visible rather than hiding them behind a percentage. In the test session this was the pattern that survived conditioning best: across the store the rate rises from about 5% at one language to about 21% at ten or more, and inside RPG $10–20 peers from about 6% to about 31%.</p>
+    <p>Grey bars show the store; orange bars show <strong>{peerLabel}</strong> within the same language group. Counts keep tiny groups visible rather than hiding them behind a percentage. Of the patterns we checked, this one held up best inside a peer group: across the store the rate rises from about 5% at one language to about 21% at ten or more, and inside RPG $10–20 peers from about 6% to about 31%.</p>
     <RateChart rows={languageRows} title="Language support: store versus selected peers" yLabel="Language group · population" {xLabel} {fit}
       legend={[{ label: 'all eligible games (store)', color: 'var(--dot)' }, { label: 'selected peers', color: 'var(--sel)' }]} />
     <p class="note">A higher reach rate does not show that adding translations caused success. Budget, genre and game age can differ across groups; language support may have changed after launch. Zero or unreported language counts are shown separately.</p>
