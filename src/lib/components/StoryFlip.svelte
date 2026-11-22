@@ -3,6 +3,7 @@
   // Grey for the count share and blue for the rate, matching the chart underneath.
   import { dataset } from '$lib/stores.js';
   import { fmt, pct } from '$lib/data.js';
+  import { reveal } from '$lib/reveal.js';
   const FALLBACK = [
     { key: '$0–5', n: 61319, rate: 0.0703, shareOfSuccess: 0.4951 },
     { key: '$20–40', n: 1577, rate: 0.1795, shareOfSuccess: 0.0325 }
@@ -14,8 +15,8 @@
 </script>
 
 <div class="flip">
-  {#each rows as r}
-    <div>
+  {#each rows as r, i}
+    <div use:reveal={i * 450}>
       <h3>{r.key} shelf · {fmt(r.n)} games</h3>
       <p class="row"><span class="v count">{pct(r.shareOfSuccess)}</span><span class="l">of all successful games sit on this shelf</span></p>
       <p class="row"><span class="v rate">{pct(r.rate)}</span><span class="l">of the games on this shelf are successful</span></p>

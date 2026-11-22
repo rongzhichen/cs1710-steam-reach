@@ -5,6 +5,7 @@
   import { dataset, threshold, peerGenre, peerBand, ladderFlags, exploreState } from '$lib/stores.js';
   import { parseState, serializeState } from '$lib/urlState.js';
   import { replaceState } from '$app/navigation';
+  import { reveal } from '$lib/reveal.js';
   import StoryNum from '$lib/components/StoryNum.svelte';
   import StoryHook from '$lib/components/StoryHook.svelte';
   import StoryCounts from '$lib/components/StoryCounts.svelte';
@@ -83,13 +84,13 @@
     <p class="eyebrow">1 · The setting</p>
     <h2>Does a low price mean greater reach?</h2>
     <p>You are a solo developer or a team of a few people, deciding the genre, price, scope and languages of your next Steam game, with one shot at it. You know the hits in your genre. You have never seen the long tail of games that sold nothing, so your sense of what works is shaped by the games that survived. The first number we found speaks to exactly that instinct.</p>
-    <p class="stat"><StoryNum k="hook_successfulCostAtMost10" fallback="85%" /></p>
+    <p class="stat"><StoryNum k="hook_successfulCostAtMost10" fallback="85%" countUp /></p>
     <p class="stat-l">of games that reached 100,000 owners cost $10 or less, free games included.</p>
     <p>Look only at the winners and the lesson writes itself: price low. Half of all successful games sit on the $0 to $5 shelf alone.</p>
     <p class="fig-title">Where the successful games are</p>
     <StoryHook />
     <p class="caption">Share of the <StoryNum k="longTail_reach100k" as="n" fallback="99,754" />-game store's successful titles (owner band ≥ 100k) on each price shelf. Snapshot prices.</p>
-    <p class="takeaway"><b>So far</b>The chart shows where the successful games are. It does not show how often a game on each shelf succeeds, and abundance on a shelf is not the same as a good chance of success on it. The question to ask is not <em>where are the successful games</em> but <em>how often does a game like mine succeed</em>.</p>
+    <p class="takeaway" use:reveal><b>So far</b>The chart shows where the successful games are. It does not show how often a game on each shelf succeeds, and abundance on a shelf is not the same as a good chance of success on it. The question to ask is not <em>where are the successful games</em> but <em>how often does a game like mine succeed</em>.</p>
     <p class="terms-h">Four words this page uses</p>
     <dl class="terms">
       <div><dt>Reach</dt><dd>The lower bound of SteamSpy's estimated-owner band. It is not sales, revenue or active players.</dd></div>
@@ -109,7 +110,7 @@
     <StoryCounts />
     <p class="caption">Grey: where the successful games are, as a share of all successful games. Blue: the reach rate inside each shelf. Only <StoryNum k="longTail_reach100k" as="pct1" fallback="8.7%" /> of all games reach 100k, and <StoryNum k="longTail_under20k" fallback="75%" /> never pass 20,000 owners.</p>
     <p>Free games are a case of their own. <StoryNum k="counts_rate_free" fallback="16%" /> of the <StoryNum k="counts_rate_free" as="n" fallback="9,484" /> free games reach 100,000 owners, second only to the $20 to $40 shelf and more than double the $0 to $5 rate. Removing the price removes the barrier to trying a game, which is a different mechanism from whatever separates the paid shelves, so the story treats free as its own category rather than as the cheapest end of a price scale.</p>
-    <p class="takeaway"><b>Takeaway</b>The $0 to $5 shelf holds the most successful games and has the lowest reach rate of the six shelves. A count tells you where the hits are. A rate tells you how often a game gets there.</p>
+    <p class="takeaway" use:reveal><b>Takeaway</b>The $0 to $5 shelf holds the most successful games and has the lowest reach rate of the six shelves. A count tells you where the hits are. A rate tells you how often a game gets there.</p>
     <div class="caveat">This does not mean raising a price raises reach. Pricier games are made by different teams with different budgets. It means the right comparison is a rate among comparable games, not a count of visible hits.</div>
   </section>
 
@@ -119,7 +120,7 @@
     <h2>Genre changes the comparison</h2>
     <p>The store-wide rate is still the wrong baseline for one developer, because genres differ. Inside RPG, the $20 to $40 shelf reaches 100,000 owners <StoryNum k="genre_rate_rpg_20_40" fallback="22%" /> of the time against <StoryNum k="genre_rate_all_20_40" fallback="18%" /> across all genres. Pick a genre to see how its shelves compare with the store.</p>
     <StoryGenre />
-    <p class="takeaway"><b>Takeaway</b>The store-wide rate is an average over genres that behave differently. Start from the rate inside your own genre.</p>
+    <p class="takeaway" use:reveal><b>Takeaway</b>The store-wide rate is an average over genres that behave differently. Start from the rate inside your own genre.</p>
   </section>
 
   <section id="traits">
@@ -130,13 +131,13 @@
     <p class="fig-title">What successful games share: the whole store against one peer group</p>
     <StoryTraits />
     <p class="caption">Share of successful games meeting each condition. Review share counts games with ≥ 50 reviews only. The same comparison for any genre and shelf is in the tool below.</p>
-    <p class="takeaway"><b>Takeaway</b>There is no single profile of a successful game. It changes with genre and shelf, so read it from your peer group: the games that share both with yours.</p>
+    <p class="takeaway" use:reveal><b>Takeaway</b>There is no single profile of a successful game. It changes with genre and shelf, so read it from your peer group: the games that share both with yours.</p>
   </section>
 
   <section id="message">
     <p class="eyebrow">5 · The main message</p>
     <h2>Compare rates among relevant peers</h2>
-    <div class="callout"><p>For solo Steam developers, ownership rates among similar games are more useful for pricing decisions than counts of popular low-priced titles.</p></div>
+    <div class="callout" use:reveal><p>For solo Steam developers, ownership rates among similar games are more useful for pricing decisions than counts of popular low-priced titles.</p></div>
     <p>Low-priced games account for most high-ownership titles, but they do not have the highest proportion of games reaching our threshold. Genre and price together reveal differences in characteristics such as playtime and platform support. So the useful habit is to choose the games you would actually be compared with, and read proportions inside that group rather than success stories outside it.</p>
     <div class="caveat">What the data cannot say: owner estimates are bands from SteamSpy, not sales, revenue or active players, and prices are a snapshot. None of these associations show that changing a price or adding a feature will cause greater reach. The 100,000-owner line is a choice; the tools below let you move it.</div>
   </section>
@@ -145,9 +146,9 @@
     <p class="eyebrow">Part 2 · Your turn</p>
     <p class="lede">The story used RPGs as its example. These three tools run the same comparison for any genre and price, and show how far to trust the answer.</p>
     <div class="routes">
-      <a href="#tool"><b>6 · Compare</b>Which shelf in my genre has the highest reach rate, and what do its successful games share?</a>
-      <a href="#explore"><b>Explore</b>What does the whole store look like, one game at a time? Select any region and see who is in it.</a>
-      <a href="#next"><b>Peer lab</b>How sure can I be? Add conditions, watch the sample shrink, and move the success line.</a>
+      <a href="#tool" use:reveal><b>6 · Compare</b>Which shelf in my genre has the highest reach rate, and what do its successful games share?</a>
+      <a href="#explore" use:reveal={120}><b>Explore</b>What does the whole store look like, one game at a time? Select any region and see who is in it.</a>
+      <a href="#next" use:reveal={240}><b>Peer lab</b>How sure can I be? Add conditions, watch the sample shrink, and move the success line.</a>
     </div>
   </div>
 
@@ -177,10 +178,10 @@
     <h2>What to take with you</h2>
     <p class="lede">Most successful Steam games are cheap, and most cheap games are not successful. Both are true, and only the second one describes a game that has not launched yet. Four habits follow from it.</p>
     <div class="steps">
-      <div><b>1 · Choose your peers.</b> Pick the genre you are committing to and the price band you are considering, not the whole store.</div>
-      <div><b>2 · Read the rate, not the count.</b> The shelf with the most successful games is rarely the shelf where a game most often succeeds.</div>
-      <div><b>3 · Budget for what your peers share.</b> Check playtime, languages and platforms among successful peers before paying for a feature the store-wide profile suggests.</div>
-      <div><b>4 · Stress-test the answer.</b> Move the success threshold and read the sample size. A conclusion that holds at 100k and at 500k, on more than a handful of games, is one you can plan around.</div>
+      <div use:reveal><b>1 · Choose your peers.</b> Pick the genre you are committing to and the price band you are considering, not the whole store.</div>
+      <div use:reveal={120}><b>2 · Read the rate, not the count.</b> The shelf with the most successful games is rarely the shelf where a game most often succeeds.</div>
+      <div use:reveal={240}><b>3 · Budget for what your peers share.</b> Check playtime, languages and platforms among successful peers before paying for a feature the store-wide profile suggests.</div>
+      <div use:reveal={360}><b>4 · Stress-test the answer.</b> Move the success threshold and read the sample size. A conclusion that holds at 100k and at 500k, on more than a handful of games, is one you can plan around.</div>
     </div>
     <div class="caveat">Keep the limits in view. Reach here is an estimated-owner band, not sales or revenue; prices and features are a snapshot, not launch-day choices; and every figure on this page is an association. None of it shows that changing a price or adding a feature will cause greater reach.</div>
     <p class="src"><a href="#tool">Back to the comparison tool</a> · <a href="#hook">Read the story again</a></p>
